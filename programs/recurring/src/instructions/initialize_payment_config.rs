@@ -24,7 +24,7 @@ pub struct InitializePaymentConfig<'info> {
         token::mint = payment_mint,
         token::authority = merchant_auth
     )]
-    pub payment_pda: Account<'info, TokenAccount>,
+    pub payment_token_account: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
@@ -35,6 +35,8 @@ pub fn handler(
     ctx: Context<InitializePaymentConfig>,
     minimum_amount_to_delegate: u64,
     spacing_period: i64,
+    collect_on_init: bool,
+    amount_to_collect: u64,
 ) -> ProgramResult {
     let bump = *ctx.bumps.get("payment_config").unwrap();
     let payment_config = &mut ctx.accounts.payment_config;
@@ -46,10 +48,12 @@ pub fn handler(
     );
 
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
-    payment_config.payment_pda = ctx.accounts.payment_pda.key();
+    payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
     payment_config.merchant_authority = ctx.accounts.merchant_auth.key();
     payment_config.minimum_amount_to_delegate = minimum_amount_to_delegate;
     payment_config.spacing_period = spacing_period;
+    payment_config.collect_on_init = collect_on_init;
+    payment_config.amount_to_collect = amount_to_collect;
 
     payment_config.bump = bump;
 
