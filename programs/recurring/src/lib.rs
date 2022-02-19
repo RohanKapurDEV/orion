@@ -4,9 +4,7 @@ mod error;
 mod instructions;
 mod state;
 
-use error::*;
 use instructions::*;
-use state::*;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
