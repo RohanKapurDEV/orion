@@ -26,6 +26,18 @@ pub struct MerchantAuthority {
 }
 ```
 
+The seeds for a `MerchantAuthority` are:
+
+```rust
+[b"merchant_authority", merchant_authority.key().as_ref(), authority.key().as_ref(), bump],
+```
+
+An account can be initialized using the `initialize_merchant_authority()` instruction in the `recurring` smart contract.
+
+Great! Now that you have a `MerchantAuthority` account, you can move onto the fun part: defining the structure of how'd you like payments for your service.
+
+To do this, you'll need to make a `PaymentConfig` account. Here's what that looks like:
+
 ## Workflow for consumers
 
 ## Explaining the accounts
