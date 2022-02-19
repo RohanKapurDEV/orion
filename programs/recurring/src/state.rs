@@ -1,4 +1,3 @@
-use crate::error::*;
 use anchor_lang::prelude::*;
 
 #[account]
@@ -16,24 +15,20 @@ pub struct PaymentConfig {
     pub payment_mint: Pubkey,
     pub payment_pda: Pubkey,
     pub merchant_authority: Pubkey,
+    pub minimum_amount_to_delegate: u64,
     pub spacing_period: i64, // seconds in between payment collections
     pub delay_format: u8, // delay format for payment schedule (start of next minute, hour, day, week, etc...)
     pub bump: u8,
 }
 
-// impl PaymentConfig {
-//     fn decode_delay_format(self) -> Result<DecodedDelayFormat, ProgramError> {
-//         match self.delay_format {
-//             0 => Ok(DecodedDelayFormat::Minute),
-//             1 => Ok(DecodedDelayFormat::Hour),
-//             2 => Ok(DecodedDelayFormat::Day),
-//             3 => Ok(DecodedDelayFormat::Week),
-//             4 => Ok(DecodedDelayFormat::Month),
-//             5 => Ok(DecodedDelayFormat::Year),
-//             6..=u8::MAX => Err(ErrorCode::InvalidDelayFormat.into()),
-//         }
-//     }
-// }
+#[account]
+#[derive(Default)]
+pub struct PaymentMetadata {
+    pub owner: Pubkey,
+    pub payment_config: Pubkey,
+    pub owner_payment_account: Pubkey,
+    pub amount_delegated: u64,
+}
 
 pub enum DecodedDelayFormat {
     Minute,
