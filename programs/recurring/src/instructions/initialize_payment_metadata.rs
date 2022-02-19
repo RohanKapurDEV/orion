@@ -42,7 +42,9 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let payment_metadata = &mut ctx.accounts.payment_metadata;
     let payment_config = &mut ctx.accounts.payment_config;
     let program_as_signer = &mut ctx.accounts.program_as_signer;
+
     let init_amount = payment_config.amount_to_collect;
+    let payment_config_key = payment_config.key();
 
     require!(
         amount_delegated > payment_config.minimum_amount_to_delegate,
@@ -50,7 +52,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     );
 
     payment_metadata.owner = ctx.accounts.payer.key();
-    payment_metadata.payment_config = ctx.accounts.payment_config.key();
+    payment_metadata.payment_config = payment_config_key;
     payment_metadata.owner_payment_account = ctx.accounts.owner_payment_account.key();
     payment_metadata.amount_delegated = amount_delegated;
     payment_metadata.bump = bump;
