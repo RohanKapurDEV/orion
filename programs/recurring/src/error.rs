@@ -4,6 +4,16 @@ use anchor_lang::prelude::*;
 pub enum ErrorCode {
     #[msg("Invalid delay format")]
     InvalidDelayFormat,
+    #[msg("Incorrect mint")]
+    IncorrectMint,
+    #[msg("Incorrect authority for payment config")]
+    IncorrectAuthorityForPaymentConfig,
+    #[msg("Account holds insufficient balance for delegation")]
+    InsufficientBalanceToDelegate,
+    #[msg("Amount being delegated is lower than the specified minimum in the payment config")]
+    AmountToDelegateIsSmallerThanMinimum,
+    #[msg("Token account is not owned by the instruction signer")]
+    TokenAccountNotOwnedBySigner,
 }
 
 #[macro_export]
