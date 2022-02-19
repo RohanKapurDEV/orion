@@ -16,6 +16,8 @@ pub enum ErrorCode {
     TokenAccountNotOwnedBySigner,
     #[msg("Incorrect payment token account was supplied")]
     IncorrectPaymentTokenAccount,
+    #[msg("Incorrect payment metadata owner was supplied")]
+    IncorrectPaymentMetadataOwner,
 }
 
 #[macro_export]
