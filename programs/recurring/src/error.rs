@@ -18,6 +18,10 @@ pub enum ErrorCode {
     IncorrectPaymentTokenAccount,
     #[msg("Incorrect payment metadata owner was supplied")]
     IncorrectPaymentMetadataOwner,
+    #[msg("Incorrect payment config account was supplied")]
+    IncorrectPaymentConfigAccount,
+    #[msg("Incorrect owner payment account was supplied")]
+    IncorrectOwnerPaymentAccount,
 }
 
 #[macro_export]
