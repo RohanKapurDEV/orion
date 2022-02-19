@@ -16,7 +16,7 @@ pub struct PaymentConfig {
     pub payment_token_account: Pubkey,
     pub merchant_authority: Pubkey,
     pub collect_on_init: bool,
-    pub amount_to_collect: u64,
+    pub amount_to_collect_on_init: u64,
     pub minimum_amount_to_delegate: u64,
     pub amount_to_collect_per_period: u64,
     pub spacing_period: i64, // seconds in between payment collections
@@ -27,6 +27,7 @@ pub struct PaymentConfig {
 #[derive(Default)]
 pub struct PaymentMetadata {
     pub owner: Pubkey,
+    pub created_at: i64,
     pub payment_config: Pubkey,
     pub owner_payment_account: Pubkey,
     pub amount_delegated: u64,

@@ -20,19 +20,21 @@ pub mod recurring {
         instructions::initialize_merchant_authority::handler(ctx)
     }
 
+    // transfer_admin, accept_admin, collect_payment, close_payment_config
+
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
         minimum_amount_to_delegate: u64,
         spacing_period: i64,
         collect_on_init: bool,
-        amount_to_collect: u64,
+        amount_to_collect_on_init: u64,
     ) -> ProgramResult {
         instructions::initialize_payment_config::handler(
             ctx,
             minimum_amount_to_delegate,
             spacing_period,
             collect_on_init,
-            amount_to_collect,
+            amount_to_collect_on_init,
         )
     }
 
@@ -44,4 +46,6 @@ pub mod recurring {
     ) -> ProgramResult {
         instructions::initialize_payment_metadata::handler(ctx, amount_delegated)
     }
+
+    // close_payment_metadata_account, add_balance_to_delegation, remove_from_delegation
 }

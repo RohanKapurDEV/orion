@@ -43,7 +43,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let payment_config = &mut ctx.accounts.payment_config;
     let program_as_signer = &mut ctx.accounts.program_as_signer;
 
-    let init_amount = payment_config.amount_to_collect;
+    let init_amount = payment_config.amount_to_collect_on_init;
     let payment_config_key: Pubkey = payment_config.key();
 
     require!(
