@@ -28,6 +28,7 @@ pub struct PaymentMetadata {
     pub payment_config: Pubkey,
     pub owner_payment_account: Pubkey,
     pub amount_delegated: u64,
+    pub bump: u8,
 }
 
 pub enum DecodedDelayFormat {
