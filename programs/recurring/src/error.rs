@@ -14,6 +14,8 @@ pub enum ErrorCode {
     AmountToDelegateIsSmallerThanMinimum,
     #[msg("Token account is not owned by the instruction signer")]
     TokenAccountNotOwnedBySigner,
+    #[msg("Incorrect payment token account was supplied")]
+    IncorrectPaymentTokenAccount,
 }
 
 #[macro_export]

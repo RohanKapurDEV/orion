@@ -26,7 +26,7 @@ pub struct InitializePaymentMetadata<'info> {
 
     #[account(
         mut,
-        constraint = payment_token_account.key() == payment_config.payment_token_account
+        constraint = payment_token_account.key() == payment_config.payment_token_account @ ErrorCode::IncorrectPaymentTokenAccount
     )]
     pub payment_token_account: Account<'info, TokenAccount>,
 
