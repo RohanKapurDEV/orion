@@ -17,7 +17,6 @@ pub struct PaymentConfig {
     pub merchant_authority: Pubkey,
     pub minimum_amount_to_delegate: u64,
     pub spacing_period: i64, // seconds in between payment collections
-    pub delay_format: u8, // delay format for payment schedule (start of next minute, hour, day, week, etc...)
     pub bump: u8,
 }
 
@@ -29,13 +28,4 @@ pub struct PaymentMetadata {
     pub owner_payment_account: Pubkey,
     pub amount_delegated: u64,
     pub bump: u8,
-}
-
-pub enum DecodedDelayFormat {
-    Minute,
-    Hour,
-    Day,
-    Week,
-    Month,
-    Year,
 }
