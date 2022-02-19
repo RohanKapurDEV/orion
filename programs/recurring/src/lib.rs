@@ -28,6 +28,7 @@ pub mod recurring {
         spacing_period: i64,
         collect_on_init: bool,
         amount_to_collect_on_init: u64,
+        amount_to_collect_per_period: u64,
     ) -> ProgramResult {
         instructions::initialize_payment_config::handler(
             ctx,
@@ -35,6 +36,7 @@ pub mod recurring {
             spacing_period,
             collect_on_init,
             amount_to_collect_on_init,
+            amount_to_collect_per_period,
         )
     }
 

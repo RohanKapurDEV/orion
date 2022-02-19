@@ -37,6 +37,7 @@ pub fn handler(
     spacing_period: i64,
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
+    amount_to_collect_per_period: u64,
 ) -> ProgramResult {
     let bump = *ctx.bumps.get("payment_config").unwrap();
     let payment_config = &mut ctx.accounts.payment_config;
@@ -52,6 +53,7 @@ pub fn handler(
     payment_config.merchant_authority = ctx.accounts.merchant_auth.key();
     payment_config.minimum_amount_to_delegate = minimum_amount_to_delegate;
     payment_config.spacing_period = spacing_period;
+    payment_config.amount_to_collect_per_period = amount_to_collect_per_period;
     payment_config.collect_on_init = collect_on_init;
     payment_config.amount_to_collect_on_init = amount_to_collect_on_init;
 
