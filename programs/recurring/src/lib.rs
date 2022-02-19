@@ -24,11 +24,15 @@ pub mod recurring {
         ctx: Context<InitializePaymentConfig>,
         minimum_amount_to_delegate: u64,
         spacing_period: i64,
+        collect_on_init: bool,
+        amount_to_collect: u64,
     ) -> ProgramResult {
         instructions::initialize_payment_config::handler(
             ctx,
             minimum_amount_to_delegate,
             spacing_period,
+            collect_on_init,
+            amount_to_collect,
         )
     }
 
