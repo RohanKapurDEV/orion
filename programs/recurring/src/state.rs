@@ -16,6 +16,7 @@ pub struct PaymentConfig {
     pub payment_pda: Pubkey,
     pub merchant_authority: Pubkey,
     pub minimum_amount_to_delegate: u64,
+    pub amount_to_collect_per_period: u64,
     pub spacing_period: i64, // seconds in between payment collections
     pub bump: u8,
 }
