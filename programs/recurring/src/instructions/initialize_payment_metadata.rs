@@ -55,6 +55,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     payment_metadata.payment_config = payment_config_key;
     payment_metadata.owner_payment_account = ctx.accounts.owner_payment_account.key();
     payment_metadata.amount_delegated = amount_delegated;
+    payment_metadata.payment_failure = false;
     payment_metadata.bump = bump;
 
     if payment_config.collect_on_init == true {
@@ -69,7 +70,15 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
             transfer_accounts,
         );
 
-        transfer(cpi_ctx, init_amount)?
+        let transfer_attempt = transfer(cpi_ctx, init_amount);
+
+        match transfer_attempt {
+            Ok(_x) => (),
+            Err(y) => {
+                payment_metadata.payment_failure = true;
+                return Err(y);
+            }
+        }
     }
 
     let cpi_accounts = Approve {
@@ -79,7 +88,6 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     };
 
     let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
-    approve(cpi_ctx, amount_delegated)?;
 
     Ok(())
 }
