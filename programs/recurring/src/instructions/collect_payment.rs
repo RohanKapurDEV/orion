@@ -40,7 +40,6 @@ pub struct CollectPayment<'info> {
 }
 
 pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
-    // let merchant_authority = &mut ctx.accounts.merchant_authority;
     let payment_config = &mut ctx.accounts.payment_config;
     let owner_payment_account = &mut ctx.accounts.owner_payment_account;
     let payment_metadata = &mut ctx.accounts.payment_metadata;
@@ -108,7 +107,15 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
         signer,
     );
 
-    transfer(cpi_ctx, amount_being_spent)?;
+    let transfer_attempt = transfer(cpi_ctx, amount_being_spent);
+
+    match transfer_attempt {
+        Ok(_x) => (),
+        Err(y) => {
+            payment_metadata.payment_failure = true;
+            return Err(y);
+        }
+    }
 
     payment_metadata.payments_collected = payment_metadata
         .payments_collected
