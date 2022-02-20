@@ -24,6 +24,8 @@ pub enum ErrorCode {
     IncorrectOwnerPaymentAccount,
     #[msg("Incorrect delegate for token account")]
     IncorrectDelegateForTokenAccount,
+    #[msg("Incorrect collection authority")]
+    IncorrectCollectionAuthority,
 }
 
 #[macro_export]
