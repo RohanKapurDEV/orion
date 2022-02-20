@@ -66,6 +66,9 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
 
     // (payment_metadata.created_at + ((payment_metadata.payments_collected + 1) * payment_config.spacing_period)) >= current_timestamp => PAYMENT AUTHORIZED, else, PAYMENT UNAUTHORIZED
 
+    let clock = Clock::get()?;
+    let current_timestamp = clock.unix_timestamp;
+
     let obligation_created_at = payment_metadata.created_at;
     let spacing_period = payment_config.spacing_period;
 
@@ -74,14 +77,16 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
         .checked_add(1 as u16)
         .unwrap();
 
-    let actual_diff = spacing_period
+    let time_delta = spacing_period
         .checked_mul(applied_payments_collected as i64)
         .unwrap();
 
-    let base_value = obligation_created_at.checked_add(actual_diff).unwrap();
+    let base_value = obligation_created_at.checked_add(time_delta).unwrap();
 
-    let clock = Clock::get()?;
-    let current_timestamp = clock.unix_timestamp;
+    require!(
+        base_value >= current_timestamp,
+        ErrorCode::PaymentUnauthorized
+    );
 
     let transfer_accounts = Transfer {
         from: ctx.accounts.owner_payment_account.to_account_info(),
