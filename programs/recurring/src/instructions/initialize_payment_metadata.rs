@@ -88,6 +88,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     payment_metadata.owner_payment_account = ctx.accounts.owner_payment_account.key();
     payment_metadata.amount_delegated = amount_delegated;
     payment_metadata.payment_failure = false;
+    payment_metadata.payments_collected = 0;
     payment_metadata.bump = bump;
 
     Ok(())
