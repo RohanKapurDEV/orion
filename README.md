@@ -29,7 +29,7 @@ pub struct MerchantAuthority {
 The seeds for a `MerchantAuthority` are:
 
 ```rust
-[b"merchant_authority", merchant_authority.key().as_ref(), authority.key().as_ref(), bump],
+[b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref(), bump],
 ```
 
 An account can be initialized using the `initialize_merchant_authority()` instruction in the `recurring` smart contract.
