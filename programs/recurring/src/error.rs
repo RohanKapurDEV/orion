@@ -26,6 +26,8 @@ pub enum ErrorCode {
     IncorrectDelegateForTokenAccount,
     #[msg("Incorrect collection authority")]
     IncorrectCollectionAuthority,
+    #[msg("program_as_signer account not an authorized delegate for specified token account")]
+    ProgramAsSignerNotAuthorized,
 }
 
 #[macro_export]
