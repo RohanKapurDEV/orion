@@ -6,6 +6,8 @@ pub enum ErrorCode {
     InvalidDelayFormat,
     #[msg("Incorrect mint")]
     IncorrectMint,
+    #[msg("Incorrect authority")]
+    IncorrectAuthority,
     #[msg("Incorrect authority for payment config")]
     IncorrectAuthorityForPaymentConfig,
     #[msg("Account holds insufficient balance for delegation")]
