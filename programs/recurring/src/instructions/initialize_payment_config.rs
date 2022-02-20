@@ -4,7 +4,7 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 
 #[derive(Accounts)]
 pub struct InitializePaymentConfig<'info> {
-    #[account(constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthority)]
+    #[account(constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthorityForPaymentConfig)]
     pub payer: Signer<'info>,
 
     #[account(
@@ -43,11 +43,6 @@ pub fn handler(
     let bump = *ctx.bumps.get("payment_config").unwrap();
     let payment_config = &mut ctx.accounts.payment_config;
     let merchant_authority = &mut ctx.accounts.merchant_auth;
-
-    require!(
-        ctx.accounts.payer.key() == merchant_authority.current_authority,
-        ErrorCode::IncorrectAuthorityForPaymentConfig
-    );
 
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
     payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
