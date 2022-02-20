@@ -40,6 +40,10 @@ pub mod recurring {
         )
     }
 
+    pub fn collect_payment(ctx: Context<CollectPayment>) -> ProgramResult {
+        instructions::collect_payment::handler(ctx)
+    }
+
     // Consumer instructions
 
     pub fn initialize_payment_metadata(
