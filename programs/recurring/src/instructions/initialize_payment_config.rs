@@ -42,7 +42,6 @@ pub fn handler(
 ) -> ProgramResult {
     let bump = *ctx.bumps.get("payment_config").unwrap();
     let payment_config = &mut ctx.accounts.payment_config;
-    let merchant_authority = &mut ctx.accounts.merchant_auth;
 
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
     payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
