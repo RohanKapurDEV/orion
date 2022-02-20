@@ -4,6 +4,7 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 
 #[derive(Accounts)]
 pub struct InitializePaymentConfig<'info> {
+    #[account(constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     #[account(
