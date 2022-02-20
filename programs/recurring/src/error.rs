@@ -28,6 +28,10 @@ pub enum ErrorCode {
     IncorrectCollectionAuthority,
     #[msg("program_as_signer account not an authorized delegate for specified token account")]
     ProgramAsSignerNotAuthorized,
+    #[msg(
+        "Authority is attempting to make user pay earier than the contractual obligation dictates"
+    )]
+    PaymentUnauthorized,
 }
 
 #[macro_export]
