@@ -8,6 +8,8 @@ pub enum ErrorCode {
     IncorrectMint,
     #[msg("Incorrect authority")]
     IncorrectAuthority,
+    #[msg("Incorrect init_authority")]
+    IncorrectInitAuthority,
     #[msg("Incorrect authority for payment config")]
     IncorrectAuthorityForPaymentConfig,
     #[msg("Account holds insufficient balance for delegation")]
