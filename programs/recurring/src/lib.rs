@@ -20,7 +20,13 @@ pub mod recurring {
         instructions::initialize_merchant_authority::handler(ctx)
     }
 
-    // transfer_admin, accept_admin, collect_payment, close_payment_config
+    pub fn transfer_merchant_authority(ctx: Context<TransferMerchantAuthority>) -> ProgramResult {
+        instructions::transfer_merchant_authority::handler(ctx)
+    }
+
+    pub fn accept_merchant_authority(ctx: Context<AcceptMerchantAuthority>) -> ProgramResult {
+        instructions::accept_merchant_authority::handler(ctx)
+    }
 
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
@@ -53,5 +59,5 @@ pub mod recurring {
         instructions::initialize_payment_metadata::handler(ctx, amount_delegated)
     }
 
-    // close_payment_metadata_account, add_balance_to_delegation, remove_from_delegation
+    // Merchant+Consumer instructions (both can call these)
 }
