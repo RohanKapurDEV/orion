@@ -28,6 +28,10 @@ pub mod recurring {
         instructions::accept_merchant_authority::handler(ctx)
     }
 
+    pub fn close_merchant_authority(ctx: Context<CloseMerchantAuthority>) -> ProgramResult {
+        instructions::close_merchant_authority::handler(ctx)
+    }
+
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
         minimum_amount_to_delegate: u64,
@@ -44,6 +48,10 @@ pub mod recurring {
             amount_to_collect_on_init,
             amount_to_collect_per_period,
         )
+    }
+
+    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>) -> ProgramResult {
+        instructions::close_payment_config::handler(ctx)
     }
 
     pub fn collect_payment(ctx: Context<CollectPayment>) -> ProgramResult {
