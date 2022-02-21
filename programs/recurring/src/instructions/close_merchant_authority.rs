@@ -10,7 +10,7 @@ pub struct CloseMerchantAuthority<'info> {
         mut,
         seeds = [b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref()],
         bump,
-        close = payer
+        close = init_authority
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
