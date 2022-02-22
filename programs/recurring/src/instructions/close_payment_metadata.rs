@@ -1,6 +1,7 @@
 use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
-use anchor_spl::token::Token;
+use anchor_lang::solana_program::program::{invoke, invoke_signed};
+use anchor_spl::token::{Token, TokenAccount};
 use spl_token::instruction::revoke;
 
 #[derive(Accounts)]
@@ -15,6 +16,9 @@ pub struct ClosePaymentMetadata<'info> {
         close = payer
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
+
+    #[account(mut, constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ ErrorCode::IncorrectOwnerPaymentAccount)]
+    pub owner_payment_account: Account<'info, TokenAccount>,
 
     #[account(
         mut,
@@ -39,34 +43,23 @@ pub struct ClosePaymentMetadata<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-// impl<'info> ClosePaymentMetadata<'info> {
-//     fn accounts(ctx: &Context<ClosePaymentMetadata>) -> ProgramResult {
-//         let payment_metadata = &ctx.accounts.payment_metadata;
-//         let current_owner = payment_metadata.owner;
-
-//         let merchant_authority = &ctx.accounts.merchant_authority;
-//         let current_authority = merchant_authority.current_authority;
-
-//         let signer_is_owner = ctx.accounts.payer.key() == current_owner;
-//         let signer_is_merchant = ctx.accounts.payer.key() == current_authority;
-
-//         require!(
-//             signer_is_owner || signer_is_merchant,
-//             ErrorCode::IncorrectAuthority
-//         );
-
-//         Ok(())
-//     }
-// }
-
-// #[access_control(ClosePaymentMetadata::accounts(&ctx))]
 pub fn handler(ctx: Context<ClosePaymentMetadata>) -> ProgramResult {
     let ix = revoke(
         &ctx.accounts.token_program.key(),
-        source_pubkey,
-        owner_pubkey,
-        signer_pubkeys,
-    );
+        &ctx.accounts.owner_payment_account.key(),
+        &ctx.accounts.payer.key(),
+        &[],
+    )
+    .unwrap();
+
+    invoke(
+        &ix,
+        &[
+            ctx.accounts.token_program.to_account_info(),
+            ctx.accounts.owner_payment_account.to_account_info(),
+            ctx.accounts.payer.to_account_info(),
+        ],
+    )?;
 
     Ok(())
 }
