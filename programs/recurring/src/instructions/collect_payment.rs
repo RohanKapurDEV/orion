@@ -7,29 +7,17 @@ pub struct CollectPayment<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectCollectionAuthority)]
     pub payer: Signer<'info>, // This account is the merchant_authority.current_authority
 
-    #[account(seeds = [b"merchant_authority", merchant_authority.key().as_ref(), payer.key().as_ref()], bump)]
+    #[account(constraint = merchant_authority.key() == payment_config.merchant_authority)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
-    #[account(
-        seeds = [b"payment_config", payment_config.key().as_ref(), merchant_authority.key().as_ref()],
-        bump,
-        constraint = payment_config.key() == payment_metadata.payment_config @ ErrorCode::IncorrectPaymentConfigAccount,
-        constraint = payment_config.merchant_authority == merchant_authority.key()
-    )]
+    #[account(constraint = payment_config.key() == payment_metadata.payment_config @ ErrorCode::IncorrectPaymentConfigAccount)]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(
-        mut,
-        seeds = [b"payment_metadata", payment_metadata_owner.key().as_ref(), payment_config.key().as_ref()],
-        bump
-    )]
+    #[account(mut)]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
     #[account(mut, constraint = payment_token_account.key() == payment_config.payment_token_account @ ErrorCode::IncorrectPaymentTokenAccount)]
     pub payment_token_account: Account<'info, TokenAccount>,
-
-    #[account(constraint = payment_metadata_owner.key() == payment_metadata.owner @ ErrorCode::IncorrectPaymentMetadataOwner)]
-    pub payment_metadata_owner: UncheckedAccount<'info>,
 
     #[account(
         mut,
