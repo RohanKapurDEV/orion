@@ -70,11 +70,11 @@ pub mod recurring {
         instructions::collect_payment::handler(ctx)
     }
 
-    pub fn reinstate_failed_payment_metadata(
-        ctx: Context<ReinstateFailedPaymentMetadata>,
-    ) -> ProgramResult {
-        instructions::reinstate_failed_payment_metadata::handler(ctx)
-    }
+    // pub fn reinstate_failed_payment_metadata(
+    //     ctx: Context<ReinstateFailedPaymentMetadata>,
+    // ) -> ProgramResult {
+    //     instructions::reinstate_failed_payment_metadata::handler(ctx)
+    // }
 
     // // Consumer instructions
 
