@@ -21,7 +21,7 @@ pub struct CollectPayment<'info> {
     #[account(
         mut,
         seeds = [b"payment_metadata", payment_metadata_owner.key().as_ref(), payment_config.key().as_ref()],
-        bump,
+        bump
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
