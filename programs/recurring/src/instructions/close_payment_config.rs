@@ -6,17 +6,14 @@ pub struct ClosePaymentConfig<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
-    #[account(
-        mut,
-        seeds = [b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref()],
-        bump,
-    )]
+    #[account(seeds = [b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref()], bump)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
     #[account(
         mut,
         seeds = [b"payment_config", payment_config.key().as_ref(), merchant_authority.key().as_ref()],
         bump,
+        constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectAuthorityForPaymentConfig,        
         close = init_authority
     )]
     pub payment_config: Account<'info, PaymentConfig>,
