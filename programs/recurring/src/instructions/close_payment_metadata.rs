@@ -11,7 +11,7 @@ pub struct ClosePaymentMetadata<'info> {
 
     #[account(
         mut,
-        seeds = [b"payment_metadata", payer.key().as_ref(), payment_config.key().as_ref()],
+        seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
         bump,
         constraint = payment_metadata.payment_config == payment_config.key(),
         close = payer

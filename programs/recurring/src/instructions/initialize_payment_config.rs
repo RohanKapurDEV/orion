@@ -3,6 +3,14 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
 #[derive(Accounts)]
+#[instruction(
+    index: u8,
+    minimum_amount_to_delegate: u64,
+    spacing_period: i64,
+    collect_on_init: bool,
+    amount_to_collect_on_init: u64,
+    amount_to_collect_per_period: u64
+)]
 pub struct InitializePaymentConfig<'info> {
     #[account(constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthorityForPaymentConfig)]
     pub payer: Signer<'info>,
@@ -10,7 +18,7 @@ pub struct InitializePaymentConfig<'info> {
     #[account(
         init,
         payer = payer,
-        seeds = [b"payment_config", payment_config.key().as_ref(), merchant_auth.key().as_ref()],
+        seeds = [b"payment_config".as_ref(), &index.to_le_bytes(),  merchant_auth.key().as_ref()],
         bump
     )]
     pub payment_config: Account<'info, PaymentConfig>,
@@ -34,6 +42,7 @@ pub struct InitializePaymentConfig<'info> {
 
 pub fn handler(
     ctx: Context<InitializePaymentConfig>,
+    index: u8,
     minimum_amount_to_delegate: u64,
     spacing_period: i64,
     collect_on_init: bool,
@@ -51,7 +60,7 @@ pub fn handler(
     payment_config.amount_to_collect_per_period = amount_to_collect_per_period;
     payment_config.collect_on_init = collect_on_init;
     payment_config.amount_to_collect_on_init = amount_to_collect_on_init;
-
+    payment_config.index = index;
     payment_config.bump = bump;
 
     Ok(())

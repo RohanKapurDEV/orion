@@ -10,7 +10,7 @@ pub struct InitializePaymentMetadata<'info> {
     #[account(
         init,
         payer = payer,
-        seeds = [b"payment_metadata", payer.key().as_ref(), payment_config.key().as_ref()],
+        seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
         bump
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
