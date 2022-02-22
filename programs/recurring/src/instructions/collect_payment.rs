@@ -13,11 +13,16 @@ pub struct CollectPayment<'info> {
     #[account(
         seeds = [b"payment_config", payment_config.key().as_ref(), merchant_authority.key().as_ref()],
         bump,
-        constraint = payment_config.key() == payment_metadata.payment_config @ ErrorCode::IncorrectPaymentConfigAccount
+        constraint = payment_config.key() == payment_metadata.payment_config @ ErrorCode::IncorrectPaymentConfigAccount,
+        constraint = payment_config.merchant_authority == merchant_authority.key()
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(mut, seeds = [b"payment_metadata", payment_metadata_owner.key().as_ref(), payment_config.key().as_ref()], bump)]
+    #[account(
+        mut,
+        seeds = [b"payment_metadata", payment_metadata_owner.key().as_ref(), payment_config.key().as_ref()],
+        bump,
+    )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
     #[account(mut, constraint = payment_token_account.key() == payment_config.payment_token_account @ ErrorCode::IncorrectPaymentTokenAccount)]
