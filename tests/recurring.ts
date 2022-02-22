@@ -20,7 +20,7 @@ describe("recurring", async () => {
   const index = 0;
   const payer = anchor.web3.Keypair.generate();
   const authority = anchor.web3.Keypair.generate();
-  const [merchantAuthority, merchantAuthorityBump] =
+  let [merchantAuthority, _merchantAuthorityBump] =
     await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from("merchant_authority"),
@@ -44,4 +44,13 @@ describe("recurring", async () => {
 
     console.log(tx);
   });
+
+  it("Create PaymentConfig account!", async () => {});
+  it("Create PaymentMetadata account!", async () => {});
+  it("Collect payment from PaymentMetadata account!", async () => {});
+  it("Transfer MerchantAuthority account!", async () => {});
+  it("Accept MerchantAuthority account!", async () => {});
+  it("Close PaymentMetadata account!", async () => {});
+  it("Close PaymentConfig account!", async () => {});
+  it("Close MerchantAuthority account!", async () => {});
 });
