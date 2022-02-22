@@ -1,6 +1,7 @@
 pub mod accept_merchant_authority;
 pub mod close_merchant_authority;
 pub mod close_payment_config;
+pub mod close_payment_metadata;
 pub mod collect_payment;
 pub mod initialize_merchant_authority;
 pub mod initialize_payment_config;
@@ -10,6 +11,7 @@ pub mod transfer_merchant_authority;
 pub use accept_merchant_authority::*;
 pub use close_merchant_authority::*;
 pub use close_payment_config::*;
+pub use close_payment_metadata::*;
 pub use collect_payment::*;
 pub use initialize_merchant_authority::*;
 pub use initialize_payment_config::*;
