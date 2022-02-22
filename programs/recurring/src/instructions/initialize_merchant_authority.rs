@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 #[derive(Accounts)]
 #[instruction(index: u8)]
 pub struct InitializeMerchantAuthority<'info> {
+    #[account(mut)]
     pub payer: Signer<'info>,
 
     #[account(
