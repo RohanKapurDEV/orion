@@ -16,24 +16,35 @@ pub mod recurring {
 
     pub fn initialize_merchant_authority(
         ctx: Context<InitializeMerchantAuthority>,
+        index: u8,
     ) -> ProgramResult {
-        instructions::initialize_merchant_authority::handler(ctx)
+        instructions::initialize_merchant_authority::handler(ctx, index)
     }
 
-    pub fn transfer_merchant_authority(ctx: Context<TransferMerchantAuthority>) -> ProgramResult {
-        instructions::transfer_merchant_authority::handler(ctx)
+    pub fn transfer_merchant_authority(
+        ctx: Context<TransferMerchantAuthority>,
+        index: u8,
+    ) -> ProgramResult {
+        instructions::transfer_merchant_authority::handler(ctx, index)
     }
 
-    pub fn accept_merchant_authority(ctx: Context<AcceptMerchantAuthority>) -> ProgramResult {
-        instructions::accept_merchant_authority::handler(ctx)
+    pub fn accept_merchant_authority(
+        ctx: Context<AcceptMerchantAuthority>,
+        index: u8,
+    ) -> ProgramResult {
+        instructions::accept_merchant_authority::handler(ctx, index)
     }
 
-    pub fn close_merchant_authority(ctx: Context<CloseMerchantAuthority>) -> ProgramResult {
-        instructions::close_merchant_authority::handler(ctx)
+    pub fn close_merchant_authority(
+        ctx: Context<CloseMerchantAuthority>,
+        index: u8,
+    ) -> ProgramResult {
+        instructions::close_merchant_authority::handler(ctx, index)
     }
 
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
+        index: u8,
         minimum_amount_to_delegate: u64,
         spacing_period: i64,
         collect_on_init: bool,
@@ -42,6 +53,7 @@ pub mod recurring {
     ) -> ProgramResult {
         instructions::initialize_payment_config::handler(
             ctx,
+            index,
             minimum_amount_to_delegate,
             spacing_period,
             collect_on_init,
@@ -50,8 +62,8 @@ pub mod recurring {
         )
     }
 
-    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>) -> ProgramResult {
-        instructions::close_payment_config::handler(ctx)
+    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>, index: u8) -> ProgramResult {
+        instructions::close_payment_config::handler(ctx, index)
     }
 
     pub fn collect_payment(ctx: Context<CollectPayment>) -> ProgramResult {
@@ -64,7 +76,7 @@ pub mod recurring {
         instructions::reinstate_failed_payment_metadata::handler(ctx)
     }
 
-    // Consumer instructions
+    // // Consumer instructions
 
     pub fn initialize_payment_metadata(
         ctx: Context<InitializePaymentMetadata>,
