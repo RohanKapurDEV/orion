@@ -6,12 +6,12 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { SystemProgram } from "@solana/web3.js";
-import { bnTo8 } from "./utils";
+import { bnTo8, bnTo1 } from "./utils";
 import BN from "bn.js";
 
 describe("recurring", async () => {
   // Configure the client to use the local cluster.
-  anchor.Provider.env();
+  const provider = anchor.Provider.env();
 
   anchor.setProvider(anchor.Provider.env());
 
@@ -24,11 +24,22 @@ describe("recurring", async () => {
     await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from("merchant_authority"),
-        bnTo8(new BN(index)),
+        bnTo1(new BN(index)),
         authority.publicKey.toBytes(),
       ],
       program.programId
     );
+
+  console.log("Payer public key: " + payer.publicKey.toString());
+  console.log("Authority public key: " + authority.publicKey.toString());
+  console.log("MerchantAuthority public key: " + merchantAuthority.toString());
+
+  before(async () => {
+    await provider.connection.confirmTransaction(
+      await provider.connection.requestAirdrop(payer.publicKey, 10_000_000_000),
+      "confirmed"
+    );
+  });
 
   it("Create MerchantAuthority account!", async () => {
     let tx = await program.methods
