@@ -11,41 +11,6 @@ ready-to-go solution out of the box.
 
 Both Merchants and Consumers can create as many of these accounts as they like as the needs of the Merchant's service require. The next sections will outline a high level workflow for both Merchants and Consumers from the perspective of the protocol.
 
-## Workflow for merchants
+## Docs coming soon
 
-Ok. So you're an entrepeneur with a vision that requires your users have the ability to pay directly from their Solana wallet on a periodic basis, but without any manual intervention. Perfect! You're in the right place at the right time, buddy. Here's how it's going to work for you: it all starts onchain.
-
-First, you'll need to create a `MerchantAuthority` account. Here's what that looks like:
-
-```rust
-pub struct MerchantAuthority {
-    pub init_authority: Pubkey, // The first authority - necessary for account derivation
-    pub current_authority: Pubkey, // The current authority
-    pub pending_authority: Pubkey, // The pending authority (Pubkey::default() to begin with)
-    pub bump: u8, // Seed bump - necessary for account derivation
-}
-```
-
-The seeds for a `MerchantAuthority` are:
-
-```rust
-[b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref(), bump],
-```
-
-An account can be initialized using the `initialize_merchant_authority()` instruction in the `recurring` smart contract.
-
-Great! Now that you have a `MerchantAuthority` account, you can move onto the fun part: defining the structure of how'd you like payments for your service.
-
-To do this, you'll need to make a `PaymentConfig` account. Here's what that looks like:
-
-## Workflow for consumers
-
-## Explaining the accounts
-
-### `MerchantAuthority`
-
-### `PaymentConfig`
-
-### `PaymentMetadata`
-
-## Calculating important values from account data
+Feel free to examine the source code in the meantime :)
