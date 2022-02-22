@@ -67,5 +67,7 @@ pub mod recurring {
         instructions::initialize_payment_metadata::handler(ctx, amount_delegated)
     }
 
-    // Merchant+Consumer instructions (both can call these)
+    pub fn close_payment_metadata(ctx: Context<ClosePaymentMetadata>) -> ProgramResult {
+        instructions::close_payment_metadata::handler(ctx)
+    }
 }

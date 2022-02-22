@@ -1,6 +1,6 @@
 use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::program::{invoke, invoke_signed};
+use anchor_lang::solana_program::program::invoke;
 use anchor_spl::token::{Token, TokenAccount};
 use spl_token::instruction::revoke;
 
