@@ -23,7 +23,7 @@ pub fn handler(ctx: Context<InitializeMerchantAuthority>, index: u8) -> ProgramR
     let bump = *ctx.bumps.get("merchant_authority").unwrap();
     let merchant_authority = &mut ctx.accounts.merchant_authority;
 
-    merchant_authority.init_authority = ctx.accounts.authority.key(); // Stored for derivation purposes
+    merchant_authority.init_authority = ctx.accounts.authority.key();
     merchant_authority.current_authority = ctx.accounts.authority.key();
     merchant_authority.pending_authority = Pubkey::default();
     merchant_authority.index = index;
