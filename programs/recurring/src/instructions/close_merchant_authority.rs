@@ -2,13 +2,14 @@ use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
+#[instruction(index: u8)]
 pub struct CloseMerchantAuthority<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority)]
     pub payer: Signer<'info>,
 
     #[account(
         mut,
-        seeds = [b"merchant_authority", merchant_authority.key().as_ref(), init_authority.key().as_ref()],
+        seeds = [b"merchant_authority".as_ref(), &index.to_le_bytes(), init_authority.key().as_ref()],
         bump,
         close = init_authority
     )]
@@ -18,6 +19,6 @@ pub struct CloseMerchantAuthority<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(_ctx: Context<CloseMerchantAuthority>) -> ProgramResult {
+pub fn handler(_ctx: Context<CloseMerchantAuthority>, _index: u8) -> ProgramResult {
     Ok(())
 }

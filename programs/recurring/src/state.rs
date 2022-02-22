@@ -6,6 +6,7 @@ pub struct MerchantAuthority {
     pub init_authority: Pubkey,
     pub current_authority: Pubkey,
     pub pending_authority: Pubkey,
+    pub index: u8,
     pub bump: u8,
 }
 
