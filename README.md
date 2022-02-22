@@ -6,7 +6,7 @@ The real key feature of the protocol is that the consumer need not be present fo
 
 The roles within the protocol are between that of Merchants and Consumers. Merchants are service providers that are looking for a web3 native format for hosting subscription payments and Consumers are basically the Merchant's customers or users.
 
-Merchants control two different accounts: `MerchantAuthority` and `PaymentConfig`, while consumers only need to make a `PaymentMetadata` account to subscribe to whatever said Merchant is offering. It is more than likely that most, if not all, merchants will need some web2 presence to effectively track their users payments status but that is to be expected. Nevertheless, the repo includes some sample code for merchants so they dont have to do all the work themselves and have a
+Merchants control two different accounts: `MerchantAuthority` and `PaymentConfig`, while consumers only need to make a `PaymentMetadata` account to subscribe to whatever said Merchant is offering. It is more than likely that most, if not all, merchants will need some web2 presence to effectively track their users payments status but that is to be expected. Nevertheless, the repo will include some sample code for merchants so they dont have to do all the work themselves and have a
 ready-to-go solution out of the box.
 
 Both Merchants and Consumers can create as many of these accounts as they like as the needs of the Merchant's service require. The next sections will outline a high level workflow for both Merchants and Consumers from the perspective of the protocol.
