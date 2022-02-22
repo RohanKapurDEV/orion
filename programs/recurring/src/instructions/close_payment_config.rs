@@ -25,6 +25,6 @@ pub struct ClosePaymentConfig<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<ClosePaymentConfig>) -> ProgramResult {
+pub fn handler(_ctx: Context<ClosePaymentConfig>) -> ProgramResult {
     Ok(())
 }

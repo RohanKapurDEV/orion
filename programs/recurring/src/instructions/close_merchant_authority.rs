@@ -18,6 +18,6 @@ pub struct CloseMerchantAuthority<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<CloseMerchantAuthority>) -> ProgramResult {
+pub fn handler(_ctx: Context<CloseMerchantAuthority>) -> ProgramResult {
     Ok(())
 }
