@@ -20,6 +20,7 @@ describe("recurring", async () => {
   const index = 0;
   const payer = anchor.web3.Keypair.generate();
   const authority = anchor.web3.Keypair.generate();
+
   let [merchantAuthority, _merchantAuthorityBump] =
     await anchor.web3.PublicKey.findProgramAddress(
       [
@@ -34,6 +35,7 @@ describe("recurring", async () => {
   console.log("Authority public key: " + authority.publicKey.toString());
   console.log("MerchantAuthority public key: " + merchantAuthority.toString());
 
+  // Airdrop some sweet, sweet lamports first
   before(async () => {
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(payer.publicKey, 10_000_000_000),
@@ -53,7 +55,12 @@ describe("recurring", async () => {
       .signers([payer])
       .rpc();
 
-    console.log(tx);
+    console.log("initialize_merchant_account tx sig: " + tx);
+
+    let merchant_authority_account =
+      await program.account.merchantAuthority.fetch(merchantAuthority);
+
+    console.log(merchant_authority_account);
   });
 
   it("Create PaymentConfig account!", async () => {});
