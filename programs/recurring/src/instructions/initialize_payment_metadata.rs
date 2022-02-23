@@ -5,6 +5,7 @@ use anchor_spl::token::{approve, transfer, Approve, Token, TokenAccount, Transfe
 #[derive(Accounts)]
 #[instruction(amount_delegated: u64)]
 pub struct InitializePaymentMetadata<'info> {
+    #[account(mut)]
     pub payer: Signer<'info>,
 
     #[account(
