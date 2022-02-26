@@ -1,8 +1,6 @@
 use crate::{error::*, state::*};
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::program_option::COption};
 use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
-use core::time;
-use std::str::*;
 
 #[derive(Accounts)]
 pub struct CollectPayment<'info> {
@@ -38,11 +36,10 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
     let payment_config = &mut ctx.accounts.payment_config;
     let owner_payment_account = &mut ctx.accounts.owner_payment_account;
     let payment_metadata = &mut ctx.accounts.payment_metadata;
-    let program_as_signer = &mut ctx.accounts.program_as_signer;
+    // let program_as_signer = &mut ctx.accounts.program_as_signer;
     let program_as_signer_bump = *ctx.bumps.get("program_as_signer").unwrap();
 
     let amount_being_spent = payment_config.amount_to_collect_per_period;
-    // For now, assume this field is updated wheneever the delegate authority spends from the token account
     let delegated_amount = owner_payment_account.delegated_amount;
 
     require!(
@@ -51,7 +48,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
     );
 
     require!(
-        owner_payment_account.delegate.unwrap() == program_as_signer.key(),
+        owner_payment_account.delegate != COption::None,
         ErrorCode::ProgramAsSignerNotAuthorized
     );
 
@@ -75,12 +72,12 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
 
     let base_value = obligation_created_at.checked_add(time_delta).unwrap();
 
-    msg!(&obligation_created_at.to_string());
-    msg!(&spacing_period.to_string());
-    msg!(&applied_payments_collected.to_string());
-    msg!(&time_delta.to_string());
-    msg!(&base_value.to_string());
-    msg!(&current_timestamp.to_string());
+    // msg!(&obligation_created_at.to_string());
+    // msg!(&spacing_period.to_string());
+    // msg!(&applied_payments_collected.to_string());
+    // msg!(&time_delta.to_string());
+    // msg!(&base_value.to_string());
+    // msg!(&current_timestamp.to_string());
 
     require!(
         base_value <= current_timestamp,

@@ -125,21 +125,19 @@ describe("recurring", async () => {
 
     let paymentConfigParams = {
       index: 0,
-      minimumAmountToDelegate: 10000 * (10 ^ mintDecimals),
       spacingPeriod: 2,
       collectOnInit: true,
-      amountToCollectOnInit: 100 * (10 ^ mintDecimals),
-      amountToCollectPerPeriod: 100 * (10 ^ mintDecimals),
+      amountToCollectOnInit: 10 * (10 ^ mintDecimals),
+      amountToCollectPerPeriod: 10 * (10 ^ mintDecimals),
     };
 
     let tx = await program.methods
       .initializePaymentConfig(
         paymentConfigParams.index,
-        new BN(paymentConfigParams.minimumAmountToDelegate),
         new BN(paymentConfigParams.spacingPeriod),
         paymentConfigParams.collectOnInit,
         new BN(paymentConfigParams.amountToCollectOnInit),
-        new BN(paymentConfigParams.amountToCollectPerPeriod)
+        new BN(paymentConfigParams.amountToCollectPerPeriod.toString())
       )
       .accounts({
         payer: authority.publicKey,
@@ -153,11 +151,16 @@ describe("recurring", async () => {
       })
       .signers([authority, paymentTokenAccount])
       .rpc();
+
+    console.log(
+      await (
+        await program.account.paymentConfig.fetch(paymentConfig)
+      ).amountToCollectPerPeriod.toString()
+    );
   });
 
   it("Create PaymentMetadata account!", async () => {
     // Create ownerPaymentAccount and mint some tokens to it
-    let amountToMint = 100000000 * (10 ^ mintDecimals);
     let x = await createAccount(
       provider.connection,
       payer,
@@ -172,12 +175,12 @@ describe("recurring", async () => {
       paymentMint,
       ownerPaymentAccount,
       payer,
-      100000000,
+      10000000000,
       6
     );
 
     let paymentMetadataParams = {
-      amountDelegated: 10000 * (10 ^ mintDecimals), // Must match paymentConfigParams.minimumAmountToDelegate
+      amountDelegated: 10 * (10 ^ mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
     };
 
     let tx = await program.methods
@@ -194,6 +197,8 @@ describe("recurring", async () => {
       })
       .signers([consumer])
       .rpc();
+
+    console.log(await program.account.paymentMetadata.fetch(paymentMetadata));
   });
 
   it("Collect payment from PaymentMetadata account!", async () => {

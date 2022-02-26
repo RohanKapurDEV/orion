@@ -49,7 +49,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let payment_config_key: Pubkey = payment_config.key();
 
     require!(
-        amount_delegated >= payment_config.minimum_amount_to_delegate,
+        amount_delegated >= payment_config.amount_to_collect_per_period,
         ErrorCode::AmountToDelegateIsSmallerThanMinimum
     );
 
@@ -60,20 +60,12 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
             authority: ctx.accounts.payer.to_account_info(),
         };
 
-        let cpi_ctx = CpiContext::new(
+        let init_cpi_ctx = CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             transfer_accounts,
         );
 
-        let transfer_attempt = transfer(cpi_ctx, init_amount);
-
-        match transfer_attempt {
-            Ok(_x) => (),
-            Err(y) => {
-                payment_metadata.payment_failure = true;
-                return Err(y);
-            }
-        }
+        transfer(init_cpi_ctx, init_amount)?;
     }
 
     let cpi_accounts = Approve {

@@ -5,11 +5,10 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 #[derive(Accounts)]
 #[instruction(
     index: u8,
-    minimum_amount_to_delegate: u64,
-    spacing_period: i64,
-    collect_on_init: bool,
-    amount_to_collect_on_init: u64,
-    amount_to_collect_per_period: u64
+    _spacing_period: i64,
+    _collect_on_init: bool,
+    _amount_to_collect_on_init: u64,
+    _amount_to_collect_per_period: u64
 )]
 pub struct InitializePaymentConfig<'info> {
     #[account(mut, constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthorityForPaymentConfig)]
@@ -43,7 +42,6 @@ pub struct InitializePaymentConfig<'info> {
 pub fn handler(
     ctx: Context<InitializePaymentConfig>,
     index: u8,
-    minimum_amount_to_delegate: u64,
     spacing_period: i64,
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
@@ -55,7 +53,6 @@ pub fn handler(
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
     payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
     payment_config.merchant_authority = ctx.accounts.merchant_auth.key();
-    payment_config.minimum_amount_to_delegate = minimum_amount_to_delegate;
     payment_config.spacing_period = spacing_period;
     payment_config.amount_to_collect_per_period = amount_to_collect_per_period;
     payment_config.collect_on_init = collect_on_init;
