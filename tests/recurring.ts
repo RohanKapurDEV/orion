@@ -164,7 +164,7 @@ describe("recurring", async () => {
     );
     ownerPaymentAccount = x;
 
-    let mintTxHash = await mintToChecked(
+    await mintToChecked(
       provider.connection,
       payer,
       paymentMint,
@@ -172,12 +172,6 @@ describe("recurring", async () => {
       payer,
       100000000,
       6
-    );
-
-    console.log(
-      "Successfully minted tokens to OwnerPaymentAccount: " +
-        mintTxHash.substring(0, 5) +
-        "..."
     );
 
     let paymentMetadataParams = {
