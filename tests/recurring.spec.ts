@@ -124,7 +124,7 @@ describe("recurring", async () => {
     let paymentConfigParams = {
       index: 0,
       minimumAmountToDelegate: 10000 * (10 ^ mintDecimals),
-      spacingPeriod: 5,
+      spacingPeriod: 2,
       collectOnInit: true,
       amountToCollectOnInit: 100 * (10 ^ mintDecimals),
       amountToCollectPerPeriod: 100 * (10 ^ mintDecimals),
@@ -196,7 +196,27 @@ describe("recurring", async () => {
 
   it("Collect payment from PaymentMetadata account!", async () => {
     // Delay by paymentConfig.spacerPeriod
-    delay(5000);
+    await delay(2000).then(async () => {
+      let tx = await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
+    // let yy = await program.account.paymentConfig.fetch(paymentConfig);
+    // console.log(yy);
+
+    // let xx = await program.account.paymentMetadata.fetch(paymentMetadata);
+    // console.log(xx);
   });
   it("Transfer MerchantAuthority account!", async () => {});
   it("Accept MerchantAuthority account!", async () => {});
