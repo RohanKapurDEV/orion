@@ -45,7 +45,6 @@ pub mod recurring {
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
         index: u8,
-        minimum_amount_to_delegate: u64,
         spacing_period: i64,
         collect_on_init: bool,
         amount_to_collect_on_init: u64,
@@ -54,7 +53,6 @@ pub mod recurring {
         instructions::initialize_payment_config::handler(
             ctx,
             index,
-            minimum_amount_to_delegate,
             spacing_period,
             collect_on_init,
             amount_to_collect_on_init,
@@ -85,7 +83,15 @@ pub mod recurring {
         instructions::initialize_payment_metadata::handler(ctx, amount_delegated)
     }
 
-    pub fn close_payment_metadata(ctx: Context<ClosePaymentMetadata>) -> ProgramResult {
-        instructions::close_payment_metadata::handler(ctx)
+    pub fn close_payment_metadata(
+        ctx: Context<ClosePaymentMetadata>,
+        payment_config_index: u8,
+        merchant_authority_index: u8,
+    ) -> ProgramResult {
+        instructions::close_payment_metadata::handler(
+            ctx,
+            payment_config_index,
+            merchant_authority_index,
+        )
     }
 }
