@@ -194,7 +194,10 @@ describe("recurring", async () => {
       .rpc();
   });
 
-  it("Collect payment from PaymentMetadata account!", async () => {});
+  it("Collect payment from PaymentMetadata account!", async () => {
+    // Delay by paymentConfig.spacerPeriod
+    delay(5000);
+  });
   it("Transfer MerchantAuthority account!", async () => {});
   it("Accept MerchantAuthority account!", async () => {});
   it("Close PaymentMetadata account!", async () => {});
