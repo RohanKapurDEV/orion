@@ -232,6 +232,7 @@ describe("recurring", async () => {
         .rpc();
     });
   });
+
   it("Transfer MerchantAuthority account!", async () => {
     await program.methods
       .transferMerchantAuthority(0)
@@ -244,8 +245,22 @@ describe("recurring", async () => {
       .signers([authority])
       .rpc();
   });
-  it("Accept MerchantAuthority account!", async () => {});
+
+  it("Accept MerchantAuthority account!", async () => {
+    await program.methods
+      .acceptMerchantAuthority(0)
+      .accounts({
+        payer: newAuthority.publicKey,
+        merchantAuthority: merchantAuthority,
+        initAuthority: authority.publicKey,
+      })
+      .signers([newAuthority])
+      .rpc();
+  });
+
   it("Close PaymentMetadata account!", async () => {});
+
   it("Close PaymentConfig account!", async () => {});
+
   it("Close MerchantAuthority account!", async () => {});
 });
