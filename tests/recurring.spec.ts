@@ -131,8 +131,8 @@ describe("recurring", async () => {
       index: 0,
       spacingPeriod: 2,
       collectOnInit: true,
-      amountToCollectOnInit: 10 * (10 ^ mintDecimals),
-      amountToCollectPerPeriod: 10 * (10 ^ mintDecimals),
+      amountToCollectOnInit: 10 * Math.pow(10, mintDecimals),
+      amountToCollectPerPeriod: 10 * Math.pow(10, mintDecimals),
     };
 
     let tx = await program.methods
@@ -184,7 +184,7 @@ describe("recurring", async () => {
     );
 
     let paymentMetadataParams = {
-      amountDelegated: 10 * (10 ^ mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
+      amountDelegated: 10 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
     };
 
     let tx = await program.methods
