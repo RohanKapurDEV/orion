@@ -5,6 +5,8 @@ import {
   TOKEN_PROGRAM_ID,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createMint,
+  mintToChecked,
+  createAccount,
 } from "@solana/spl-token";
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { bnTo8, bnTo1 } from "./utils";
@@ -47,15 +49,43 @@ describe("recurring", async () => {
 
   let paymentMint = PublicKey.default;
 
+  const consumer = anchor.web3.Keypair.generate(); // Payer in the initialize_payment_metadata instruction
+  let ownerPaymentAccount: PublicKey;
+
+  const [paymentMetadata, _paymentMetadataBump] =
+    await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from("payment_metadata"),
+        consumer.publicKey.toBytes(),
+        paymentConfig.toBytes(),
+      ],
+      program.programId
+    );
+
+  const [programAsSigner, programAsSignerBump] =
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from("program"), Buffer.from("signer")],
+      program.programId
+    );
+
   // Airdrop some sweet, sweet lamports first
   before(async () => {
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(payer.publicKey, 10_000_000_000), // 10 SOL
       "confirmed"
     );
+
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(
         authority.publicKey,
+        10_000_000_000
+      ), // 10 SOL
+      "confirmed"
+    );
+
+    await provider.connection.confirmTransaction(
+      await provider.connection.requestAirdrop(
+        consumer.publicKey,
         10_000_000_000
       ), // 10 SOL
       "confirmed"
@@ -79,10 +109,6 @@ describe("recurring", async () => {
       })
       .signers([payer])
       .rpc();
-
-    let merchant_authority_account =
-      await program.account.merchantAuthority.fetch(merchantAuthority);
-    console.log(merchant_authority_account.currentAuthority.toString());
   });
 
   it("Create PaymentConfig account!", async () => {
@@ -125,11 +151,55 @@ describe("recurring", async () => {
       })
       .signers([authority, paymentTokenAccount])
       .rpc();
-
-    console.log(tx);
   });
 
-  it("Create PaymentMetadata account!", async () => {});
+  it("Create PaymentMetadata account!", async () => {
+    // Create ownerPaymentAccount and mint some tokens to it
+    let amountToMint = 100000000 * (10 ^ mintDecimals);
+    let x = await createAccount(
+      provider.connection,
+      payer,
+      paymentMint,
+      consumer.publicKey
+    );
+    ownerPaymentAccount = x;
+
+    let mintTxHash = await mintToChecked(
+      provider.connection,
+      payer,
+      paymentMint,
+      ownerPaymentAccount,
+      payer,
+      100000000,
+      6
+    );
+
+    console.log(
+      "Successfully minted tokens to OwnerPaymentAccount: " +
+        mintTxHash.substring(0, 5) +
+        "..."
+    );
+
+    let paymentMetadataParams = {
+      amountDelegated: 10000 * (10 ^ mintDecimals), // Must match paymentConfigParams.minimumAmountToDelegate
+    };
+
+    let tx = await program.methods
+      .initializePaymentMetadata(new BN(paymentMetadataParams.amountDelegated))
+      .accounts({
+        payer: consumer.publicKey,
+        paymentMetadata: paymentMetadata,
+        paymentConfig: paymentConfig,
+        ownerPaymentAccount: ownerPaymentAccount,
+        paymentTokenAccount: paymentTokenAccount.publicKey,
+        programAsSigner: programAsSigner,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([consumer])
+      .rpc();
+  });
+
   it("Collect payment from PaymentMetadata account!", async () => {});
   it("Transfer MerchantAuthority account!", async () => {});
   it("Accept MerchantAuthority account!", async () => {});
