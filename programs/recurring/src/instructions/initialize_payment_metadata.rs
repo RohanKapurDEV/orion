@@ -60,12 +60,12 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
             authority: ctx.accounts.payer.to_account_info(),
         };
 
-        let init_cpi_ctx = CpiContext::new(
+        let transfer_cpi_ctx = CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             transfer_accounts,
         );
 
-        transfer(init_cpi_ctx, init_amount)?;
+        transfer(transfer_cpi_ctx, init_amount)?;
     }
 
     let cpi_accounts = Approve {

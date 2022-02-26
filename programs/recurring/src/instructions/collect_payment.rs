@@ -72,12 +72,12 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
 
     let base_value = obligation_created_at.checked_add(time_delta).unwrap();
 
-    // msg!(&obligation_created_at.to_string());
-    // msg!(&spacing_period.to_string());
-    // msg!(&applied_payments_collected.to_string());
-    // msg!(&time_delta.to_string());
-    // msg!(&base_value.to_string());
-    // msg!(&current_timestamp.to_string());
+    msg!(&obligation_created_at.to_string());
+    msg!(&spacing_period.to_string());
+    msg!(&applied_payments_collected.to_string());
+    msg!(&time_delta.to_string());
+    msg!(&base_value.to_string());
+    msg!(&current_timestamp.to_string());
 
     require!(
         base_value <= current_timestamp,

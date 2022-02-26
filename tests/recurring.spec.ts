@@ -152,11 +152,11 @@ describe("recurring", async () => {
       .signers([authority, paymentTokenAccount])
       .rpc();
 
-    console.log(
-      await (
-        await program.account.paymentConfig.fetch(paymentConfig)
-      ).amountToCollectPerPeriod.toString()
-    );
+    // console.log(
+    //   await (
+    //     await program.account.paymentConfig.fetch(paymentConfig)
+    //   ).amountToCollectPerPeriod.toString()
+    // );
   });
 
   it("Create PaymentMetadata account!", async () => {
@@ -197,8 +197,6 @@ describe("recurring", async () => {
       })
       .signers([consumer])
       .rpc();
-
-    console.log(await program.account.paymentMetadata.fetch(paymentMetadata));
   });
 
   it("Collect payment from PaymentMetadata account!", async () => {
