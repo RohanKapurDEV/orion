@@ -15,3 +15,8 @@ export const bnTo16 = (bn: BN): Uint8Array => {
 export const bnTo1 = (bn: BN): Uint8Array => {
   return Buffer.from([...bn.toArray("le", 1)]);
 };
+
+// sleeper function
+export const delay = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
