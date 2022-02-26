@@ -68,6 +68,8 @@ describe("recurring", async () => {
       program.programId
     );
 
+  const newAuthority = anchor.web3.Keypair.generate();
+
   // Airdrop some sweet, sweet lamports first
   before(async () => {
     await provider.connection.confirmTransaction(
@@ -229,13 +231,19 @@ describe("recurring", async () => {
         .signers([authority])
         .rpc();
     });
-    // let yy = await program.account.paymentConfig.fetch(paymentConfig);
-    // console.log(yy);
-
-    // let xx = await program.account.paymentMetadata.fetch(paymentMetadata);
-    // console.log(xx);
   });
-  it("Transfer MerchantAuthority account!", async () => {});
+  it("Transfer MerchantAuthority account!", async () => {
+    await program.methods
+      .transferMerchantAuthority(0)
+      .accounts({
+        payer: authority.publicKey,
+        merchantAuthority: merchantAuthority,
+        initAuthority: authority.publicKey,
+        proposedAuthority: newAuthority.publicKey,
+      })
+      .signers([authority])
+      .rpc();
+  });
   it("Accept MerchantAuthority account!", async () => {});
   it("Close PaymentMetadata account!", async () => {});
   it("Close PaymentConfig account!", async () => {});
