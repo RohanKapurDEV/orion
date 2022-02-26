@@ -18,8 +18,8 @@ describe("recurring", async () => {
 
   anchor.setProvider(anchor.Provider.env());
   anchor.Provider.local(undefined, {
-    commitment: "confirmed",
-    preflightCommitment: "confirmed",
+    commitment: "finalized",
+    preflightCommitment: "finalized",
   });
 
   const program = anchor.workspace.Recurring as Program<Recurring>;
@@ -204,8 +204,6 @@ describe("recurring", async () => {
   });
 
   it("Collect payment from PaymentMetadata account!", async () => {
-    await delay(10000);
-
     // Delay by paymentConfig.spacerPeriod
     await delay(5000).then(async () => {
       let tx = await program.methods
