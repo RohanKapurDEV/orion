@@ -21,7 +21,8 @@ pub struct InitializePaymentMetadata<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.mint == payment_config.payment_mint @ ErrorCode::IncorrectMint,
-        constraint = owner_payment_account.amount >= amount_delegated @ ErrorCode::InsufficientBalanceToDelegate
+        constraint = owner_payment_account.amount >= amount_delegated @ ErrorCode::InsufficientBalanceToDelegate,
+        constraint = owner_payment_account.owner == payer.key() @ ErrorCode::IncorrectAuthority
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
@@ -84,7 +85,11 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
     approve(cpi_ctx, amount_delegated)?;
 
+    let clock = Clock::get()?;
+    let unix_timestamp = clock.unix_timestamp;
+
     payment_metadata.owner = ctx.accounts.payer.key();
+    payment_metadata.created_at = unix_timestamp;
     payment_metadata.payment_config = payment_config_key;
     payment_metadata.owner_payment_account = ctx.accounts.owner_payment_account.key();
     payment_metadata.amount_delegated = amount_delegated;
