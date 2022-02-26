@@ -212,6 +212,23 @@ describe("recurring", async () => {
         .signers([authority])
         .rpc();
     });
+
+    await delay(2000).then(async () => {
+      let tx = await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
     // let yy = await program.account.paymentConfig.fetch(paymentConfig);
     // console.log(yy);
 
