@@ -75,6 +75,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     };
 
     let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+
     approve(cpi_ctx, amount_delegated)?;
 
     let clock = Clock::get()?;

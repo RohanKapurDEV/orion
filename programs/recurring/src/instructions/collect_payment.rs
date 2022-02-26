@@ -22,7 +22,7 @@ pub struct CollectPayment<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ ErrorCode::IncorrectOwnerPaymentAccount,
-        constraint = owner_payment_account.delegate.unwrap() == program_as_signer.key() @ ErrorCode::IncorrectDelegateForTokenAccount
+        constraint = owner_payment_account.delegate == COption::Some(program_as_signer.key()) @ ErrorCode::IncorrectDelegateForTokenAccount
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
@@ -45,11 +45,6 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
     require!(
         delegated_amount >= amount_being_spent,
         ErrorCode::InsufficientBalanceToDelegate
-    );
-
-    require!(
-        owner_payment_account.delegate != COption::None,
-        ErrorCode::ProgramAsSignerNotAuthorized
     );
 
     // Make sure the authority is calling the collect function at or after the timestamp at which the current payment is due.
