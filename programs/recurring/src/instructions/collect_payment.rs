@@ -1,6 +1,8 @@
 use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
+use core::time;
+use std::str::*;
 
 #[derive(Accounts)]
 pub struct CollectPayment<'info> {
@@ -54,8 +56,6 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
     );
 
     // Make sure the authority is calling the collect function at or after the timestamp at which the current payment is due.
-    // We can use payment_config.spacing_period, payment_metadata.payments_collected, and Clock to calculate the appropriate values.
-
     // (payment_metadata.created_at + ((payment_metadata.payments_collected + 1) * payment_config.spacing_period)) >= current_timestamp => PAYMENT AUTHORIZED, else, PAYMENT UNAUTHORIZED
 
     let clock = Clock::get()?;
@@ -75,8 +75,15 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
 
     let base_value = obligation_created_at.checked_add(time_delta).unwrap();
 
+    msg!(&obligation_created_at.to_string());
+    msg!(&spacing_period.to_string());
+    msg!(&applied_payments_collected.to_string());
+    msg!(&time_delta.to_string());
+    msg!(&base_value.to_string());
+    msg!(&current_timestamp.to_string());
+
     require!(
-        base_value >= current_timestamp,
+        base_value <= current_timestamp,
         ErrorCode::PaymentUnauthorized
     );
 
