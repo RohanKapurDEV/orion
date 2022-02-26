@@ -22,7 +22,10 @@ pub struct CollectPayment<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ ErrorCode::IncorrectOwnerPaymentAccount,
-        constraint = owner_payment_account.delegate == COption::Some(program_as_signer.key()) @ ErrorCode::IncorrectDelegateForTokenAccount
+        constraint = {
+            msg!("wtf {:?}", owner_payment_account.delegate);
+            owner_payment_account.delegate.unwrap() == program_as_signer.key()
+          }
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
