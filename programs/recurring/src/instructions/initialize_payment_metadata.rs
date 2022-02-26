@@ -48,7 +48,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let payment_config_key: Pubkey = payment_config.key();
 
     require!(
-        amount_delegated > payment_config.minimum_amount_to_delegate,
+        amount_delegated >= payment_config.minimum_amount_to_delegate,
         ErrorCode::AmountToDelegateIsSmallerThanMinimum
     );
 
