@@ -1,13 +1,13 @@
 use crate::{error::*, state::*};
-use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
+use anchor_lang::{prelude::*, solana_program::program_option::COption};
 use anchor_spl::token::{Token, TokenAccount};
 use spl_token::instruction::revoke;
 
 #[derive(Accounts)]
 #[instruction(payment_config_index: u8, merchant_authority_index: u8)]
 pub struct ClosePaymentMetadata<'info> {
-    #[account(constraint = payer.key() == payment_metadata.owner @ ErrorCode::IncorrectAuthority)]
+    #[account(mut, constraint = payer.key() == payment_metadata.owner @ ErrorCode::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     #[account(
@@ -42,7 +42,7 @@ pub struct ClosePaymentMetadata<'info> {
     pub init_authority: UncheckedAccount<'info>,
 
     #[account(seeds = [b"program", b"signer"], bump)]
-    pub program_as_singer: UncheckedAccount<'info>,
+    pub program_as_signer: UncheckedAccount<'info>,
 
     pub token_program: Program<'info, Token>,
 }
@@ -52,22 +52,24 @@ pub fn handler(
     _payment_config_index: u8,
     _merchant_authority_index: u8,
 ) -> ProgramResult {
-    let ix = revoke(
-        &ctx.accounts.token_program.key(),
-        &ctx.accounts.owner_payment_account.key(),
-        &ctx.accounts.payer.key(),
-        &[],
-    )
-    .unwrap();
+    if let COption::Some(_x) = ctx.accounts.owner_payment_account.delegate {
+        let ix = revoke(
+            &ctx.accounts.token_program.key(),
+            &ctx.accounts.owner_payment_account.key(),
+            &ctx.accounts.payer.key(),
+            &[],
+        )
+        .unwrap();
 
-    invoke(
-        &ix,
-        &[
-            ctx.accounts.token_program.to_account_info(),
-            ctx.accounts.owner_payment_account.to_account_info(),
-            ctx.accounts.payer.to_account_info(),
-        ],
-    )?;
+        invoke(
+            &ix,
+            &[
+                ctx.accounts.token_program.to_account_info(),
+                ctx.accounts.owner_payment_account.to_account_info(),
+                ctx.accounts.payer.to_account_info(),
+            ],
+        )?;
+    }
 
     Ok(())
 }
