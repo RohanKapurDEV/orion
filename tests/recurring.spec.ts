@@ -186,7 +186,7 @@ describe("recurring", async () => {
     );
 
     let paymentMetadataParams = {
-      amountDelegated: 10000 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
+      amountDelegated: 20 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
     };
 
     let tx = await program.methods
@@ -220,7 +220,7 @@ describe("recurring", async () => {
 
   it("Collect payment from PaymentMetadata account!", async () => {
     // Delay by paymentConfig.spacerPeriod
-    await delay(5000).then(async () => {
+    await delay(2000).then(async () => {
       let tx = await program.methods
         .collectPayment()
         .accounts({
@@ -237,7 +237,7 @@ describe("recurring", async () => {
         .rpc();
     });
 
-    await delay(5000).then(async () => {
+    await delay(2000).then(async () => {
       let tx = await program.methods
         .collectPayment()
         .accounts({
@@ -267,7 +267,22 @@ describe("recurring", async () => {
       .rpc();
   });
 
-  // it("Close PaymentMetadata account!", async () => {});
+  it("Close PaymentMetadata account!", async () => {
+    await program.methods
+      .closePaymentMetadata(0, 0)
+      .accounts({
+        payer: consumer.publicKey,
+        paymentMetadata: paymentMetadata,
+        ownerPaymentAccount: ownerPaymentAccount,
+        merchantAuthority: merchantAuthority,
+        paymentConfig: paymentConfig,
+        initAuthority: authority.publicKey,
+        programAsSigner: programAsSigner,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([consumer])
+      .rpc();
+  });
 
   it("Close PaymentConfig account!", async () => {
     await program.methods
