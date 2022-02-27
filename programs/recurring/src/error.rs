@@ -38,6 +38,8 @@ pub enum ErrorCode {
         "Authority is attempting to make user pay earier than the contractual obligation dictates"
     )]
     PaymentUnauthorized,
+    #[msg("Attempting to reinstate a payment metadata account that is not in failed state")]
+    PaymentMetadataNotInFailedState,
 }
 
 #[macro_export]
