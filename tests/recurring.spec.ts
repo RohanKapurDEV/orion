@@ -186,7 +186,7 @@ describe("recurring", async () => {
     );
 
     let paymentMetadataParams = {
-      amountDelegated: 10 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
+      amountDelegated: 10000 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
     };
 
     let tx = await program.methods
@@ -205,43 +205,6 @@ describe("recurring", async () => {
       .rpc();
   });
 
-  // it("Collect payment from PaymentMetadata account!", async () => {
-  //   // Delay by paymentConfig.spacerPeriod
-  //   await delay(5000).then(async () => {
-  //     let tx = await program.methods
-  //       .collectPayment()
-  //       .accounts({
-  //         payer: authority.publicKey,
-  //         merchantAuthority: merchantAuthority,
-  //         paymentConfig: paymentConfig,
-  //         paymentMetadata: paymentMetadata,
-  //         ownerPaymentAccount: ownerPaymentAccount,
-  //         paymentTokenAccount: paymentTokenAccount.publicKey,
-  //         programAsSigner: programAsSigner,
-  //         tokenProgram: TOKEN_PROGRAM_ID,
-  //       })
-  //       .signers([authority])
-  //       .rpc();
-  //   });
-
-  //   await delay(5000).then(async () => {
-  //     let tx = await program.methods
-  //       .collectPayment()
-  //       .accounts({
-  //         payer: authority.publicKey,
-  //         merchantAuthority: merchantAuthority,
-  //         paymentConfig: paymentConfig,
-  //         paymentMetadata: paymentMetadata,
-  //         ownerPaymentAccount: ownerPaymentAccount,
-  //         paymentTokenAccount: paymentTokenAccount.publicKey,
-  //         programAsSigner: programAsSigner,
-  //         tokenProgram: TOKEN_PROGRAM_ID,
-  //       })
-  //       .signers([authority])
-  //       .rpc();
-  //   });
-  // });
-
   it("Transfer MerchantAuthority account!", async () => {
     await program.methods
       .transferMerchantAuthority(0)
@@ -253,6 +216,43 @@ describe("recurring", async () => {
       })
       .signers([authority])
       .rpc();
+  });
+
+  it("Collect payment from PaymentMetadata account!", async () => {
+    // Delay by paymentConfig.spacerPeriod
+    await delay(5000).then(async () => {
+      let tx = await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
+
+    await delay(5000).then(async () => {
+      let tx = await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
   });
 
   it("Accept MerchantAuthority account!", async () => {
