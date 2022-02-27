@@ -96,6 +96,14 @@ describe("recurring", async () => {
       ), // 10 SOL
       "confirmed"
     );
+
+    await provider.connection.confirmTransaction(
+      await provider.connection.requestAirdrop(
+        newAuthority.publicKey,
+        10_000_000_000
+      ), // 10 SOL
+      "confirmed"
+    );
   });
 
   console.log("Payer public key: " + payer.publicKey.toString());
@@ -155,12 +163,6 @@ describe("recurring", async () => {
       })
       .signers([authority, paymentTokenAccount])
       .rpc();
-
-    // console.log(
-    //   await (
-    //     await program.account.paymentConfig.fetch(paymentConfig)
-    //   ).amountToCollectPerPeriod.toString()
-    // );
   });
 
   it("Create PaymentMetadata account!", async () => {
@@ -203,42 +205,42 @@ describe("recurring", async () => {
       .rpc();
   });
 
-  it("Collect payment from PaymentMetadata account!", async () => {
-    // Delay by paymentConfig.spacerPeriod
-    await delay(5000).then(async () => {
-      let tx = await program.methods
-        .collectPayment()
-        .accounts({
-          payer: authority.publicKey,
-          merchantAuthority: merchantAuthority,
-          paymentConfig: paymentConfig,
-          paymentMetadata: paymentMetadata,
-          ownerPaymentAccount: ownerPaymentAccount,
-          paymentTokenAccount: paymentTokenAccount.publicKey,
-          programAsSigner: programAsSigner,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .signers([authority])
-        .rpc();
-    });
+  // it("Collect payment from PaymentMetadata account!", async () => {
+  //   // Delay by paymentConfig.spacerPeriod
+  //   await delay(5000).then(async () => {
+  //     let tx = await program.methods
+  //       .collectPayment()
+  //       .accounts({
+  //         payer: authority.publicKey,
+  //         merchantAuthority: merchantAuthority,
+  //         paymentConfig: paymentConfig,
+  //         paymentMetadata: paymentMetadata,
+  //         ownerPaymentAccount: ownerPaymentAccount,
+  //         paymentTokenAccount: paymentTokenAccount.publicKey,
+  //         programAsSigner: programAsSigner,
+  //         tokenProgram: TOKEN_PROGRAM_ID,
+  //       })
+  //       .signers([authority])
+  //       .rpc();
+  //   });
 
-    await delay(5000).then(async () => {
-      let tx = await program.methods
-        .collectPayment()
-        .accounts({
-          payer: authority.publicKey,
-          merchantAuthority: merchantAuthority,
-          paymentConfig: paymentConfig,
-          paymentMetadata: paymentMetadata,
-          ownerPaymentAccount: ownerPaymentAccount,
-          paymentTokenAccount: paymentTokenAccount.publicKey,
-          programAsSigner: programAsSigner,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .signers([authority])
-        .rpc();
-    });
-  });
+  //   await delay(5000).then(async () => {
+  //     let tx = await program.methods
+  //       .collectPayment()
+  //       .accounts({
+  //         payer: authority.publicKey,
+  //         merchantAuthority: merchantAuthority,
+  //         paymentConfig: paymentConfig,
+  //         paymentMetadata: paymentMetadata,
+  //         ownerPaymentAccount: ownerPaymentAccount,
+  //         paymentTokenAccount: paymentTokenAccount.publicKey,
+  //         programAsSigner: programAsSigner,
+  //         tokenProgram: TOKEN_PROGRAM_ID,
+  //       })
+  //       .signers([authority])
+  //       .rpc();
+  //   });
+  // });
 
   it("Transfer MerchantAuthority account!", async () => {
     await program.methods
@@ -265,9 +267,30 @@ describe("recurring", async () => {
       .rpc();
   });
 
-  it("Close PaymentMetadata account!", async () => {});
+  // it("Close PaymentMetadata account!", async () => {});
 
-  it("Close PaymentConfig account!", async () => {});
+  it("Close PaymentConfig account!", async () => {
+    await program.methods
+      .closePaymentConfig(paymentConfigIndex)
+      .accounts({
+        payer: newAuthority.publicKey,
+        merchantAuthority: merchantAuthority,
+        paymentConfig: paymentConfig,
+        initAuthority: authority.publicKey,
+      })
+      .signers([newAuthority])
+      .rpc();
+  });
 
-  it("Close MerchantAuthority account!", async () => {});
+  it("Close MerchantAuthority account!", async () => {
+    await program.methods
+      .closeMerchantAuthority(0)
+      .accounts({
+        payer: newAuthority.publicKey,
+        merchantAuthority: merchantAuthority,
+        initAuthority: authority.publicKey,
+      })
+      .signers([newAuthority])
+      .rpc();
+  });
 });
