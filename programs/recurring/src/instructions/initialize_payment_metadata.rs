@@ -39,6 +39,7 @@ pub struct InitializePaymentMetadata<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+// In most cases, amount_delegated should be some multiple of payment_config.amount_to_collect_per_period
 pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -> ProgramResult {
     let bump = *ctx.bumps.get("payment_metadata").unwrap();
     let payment_metadata = &mut ctx.accounts.payment_metadata;
@@ -48,6 +49,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     let init_amount = payment_config.amount_to_collect_on_init;
     let payment_config_key: Pubkey = payment_config.key();
 
+    // Enforce amount being delegated is enough for at least 1 payment
     require!(
         amount_delegated >= payment_config.amount_to_collect_per_period,
         ErrorCode::AmountToDelegateIsSmallerThanMinimum
