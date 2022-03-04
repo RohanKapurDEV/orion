@@ -40,6 +40,8 @@ pub enum ErrorCode {
     PaymentUnauthorized,
     #[msg("Attempting to reinstate a payment metadata account that is not in failed state")]
     PaymentMetadataNotInFailedState,
+    #[msg("Attempting to extract more than the payment token account currently holds")]
+    PaymentTokenAccountBalanceTooLow,
 }
 
 #[macro_export]
