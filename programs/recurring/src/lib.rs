@@ -60,12 +60,26 @@ pub mod recurring {
         )
     }
 
-    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>, index: u8) -> ProgramResult {
-        instructions::close_payment_config::handler(ctx, index)
-    }
-
     pub fn collect_payment(ctx: Context<CollectPayment>) -> ProgramResult {
         instructions::collect_payment::handler(ctx)
+    }
+
+    pub fn withdraw_from_merchant_token_account(
+        ctx: Context<WithdrawFromMerchantTokenAccount>,
+        payment_config_index: u8,
+        merchant_authority_index: u8,
+        amount_to_withdraw: u64,
+    ) -> ProgramResult {
+        instructions::withdraw_from_merchant_token_account::handler(
+            ctx,
+            payment_config_index,
+            merchant_authority_index,
+            amount_to_withdraw,
+        )
+    }
+
+    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>, index: u8) -> ProgramResult {
+        instructions::close_payment_config::handler(ctx, index)
     }
 
     pub fn reinstate_failed_payment_metadata(
