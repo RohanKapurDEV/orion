@@ -36,7 +36,6 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
     let payment_config = &mut ctx.accounts.payment_config;
     let owner_payment_account = &mut ctx.accounts.owner_payment_account;
     let payment_metadata = &mut ctx.accounts.payment_metadata;
-    // let program_as_signer = &mut ctx.accounts.program_as_signer;
     let program_as_signer_bump = *ctx.bumps.get("program_as_signer").unwrap();
 
     let amount_being_spent = payment_config.amount_to_collect_per_period;
@@ -46,9 +45,6 @@ pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
         delegated_amount >= amount_being_spent,
         ErrorCode::InsufficientBalanceToDelegate
     );
-
-    // Make sure the authority is calling the collect function at or after the timestamp at which the current payment is due.
-    // (payment_metadata.created_at + ((payment_metadata.payments_collected + 1) * payment_config.spacing_period)) >= current_timestamp => PAYMENT AUTHORIZED, else, PAYMENT UNAUTHORIZED
 
     let clock = Clock::get()?;
     let current_timestamp = clock.unix_timestamp;
