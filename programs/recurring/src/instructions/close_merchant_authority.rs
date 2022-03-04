@@ -9,7 +9,7 @@ pub struct CloseMerchantAuthority<'info> {
 
     #[account(
         mut,
-        seeds = [b"merchant_authority".as_ref(), &index.to_le_bytes(), init_authority.key().as_ref()],
+        seeds = [b"merchant_authority", &index.to_le_bytes(), init_authority.key().as_ref()],
         bump,
         close = init_authority
     )]

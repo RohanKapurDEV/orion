@@ -11,7 +11,7 @@ pub struct ClosePaymentConfig<'info> {
 
     #[account(
         mut,
-        seeds = [b"payment_config".as_ref(), &index.to_le_bytes(),  merchant_authority.key().as_ref()],
+        seeds = [b"payment_config", &index.to_le_bytes(),  merchant_authority.key().as_ref()],
         bump,
         constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectAuthorityForPaymentConfig,        
         close = init_authority
