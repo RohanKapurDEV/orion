@@ -270,29 +270,17 @@ describe("recurring", async () => {
     });
   });
 
-  it("Accept MerchantAuthority account!", async () => {
-    await program.methods
-      .acceptMerchantAuthority(0)
-      .accounts({
-        payer: newAuthority.publicKey,
-        merchantAuthority: merchantAuthority,
-        initAuthority: authority.publicKey,
-      })
-      .signers([newAuthority])
-      .rpc();
-  });
-
   it("Merchant can withdraw payments collected from consumers", async () => {
     let x = await createAccount(
       provider.connection,
       payer,
       paymentMint,
-      newAuthority.publicKey
+      authority.publicKey
     );
 
     let withdrawFromMerchantTokenAccountParams = {
-      paymentConfigIndex: 0,
-      merchantAuthorityIndex: 0,
+      paymentConfigIndex: paymentConfigIndex,
+      merchantAuthorityIndex: merchantAuthorityIndex,
       amountToWithdraw: 20 * Math.pow(10, mintDecimals),
     };
 
@@ -303,7 +291,7 @@ describe("recurring", async () => {
         new BN(withdrawFromMerchantTokenAccountParams.amountToWithdraw)
       )
       .accounts({
-        payer: newAuthority.publicKey,
+        payer: authority.publicKey,
         paymentMetadata: paymentMetadata,
         merchantAuthority: merchantAuthority,
         paymentConfig: paymentConfig,
@@ -311,6 +299,18 @@ describe("recurring", async () => {
         receiverTokenAccount: x,
         initAuthority: authority.publicKey,
         tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([authority])
+      .rpc();
+  });
+
+  it("Accept MerchantAuthority account!", async () => {
+    await program.methods
+      .acceptMerchantAuthority(0)
+      .accounts({
+        payer: newAuthority.publicKey,
+        merchantAuthority: merchantAuthority,
+        initAuthority: authority.publicKey,
       })
       .signers([newAuthority])
       .rpc();

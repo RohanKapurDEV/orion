@@ -1,5 +1,4 @@
 import BN from "bn.js";
-import { PublicKey } from "@solana/web3.js";
 
 // .to_le_bytes() for u64
 export const bnTo8 = (bn: BN): Uint8Array => {
