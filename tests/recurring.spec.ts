@@ -292,6 +292,7 @@ describe("recurring", async () => {
       )
       .accounts({
         payer: authority.publicKey,
+        metadataOwner: consumer.publicKey,
         paymentMetadata: paymentMetadata,
         merchantAuthority: merchantAuthority,
         paymentConfig: paymentConfig,

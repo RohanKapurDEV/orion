@@ -8,9 +8,12 @@ pub struct WithdrawFromMerchantTokenAccount<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectAuthority )]
     pub payer: Signer<'info>,
 
+    #[account(constraint = metadata_owner.key() == payment_metadata.owner)]
+    pub metadata_owner: UncheckedAccount<'info>,
+
     #[account(
-        // seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
-        // bump,
+        seeds = [b"payment_metadata".as_ref(), metadata_owner.key().as_ref(), payment_config.key().as_ref()],
+        bump,
         constraint = payment_metadata.payment_config == payment_config.key() @ ErrorCode::IncorrectPaymentConfigAccount,
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
