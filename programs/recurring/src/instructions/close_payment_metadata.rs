@@ -23,14 +23,12 @@ pub struct ClosePaymentMetadata<'info> {
     pub owner_payment_account: Account<'info, TokenAccount>,
 
     #[account(
-        mut,
         seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
         bump,
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
     #[account(
-        mut,
         seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
         bump,
         constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectMerchantAuthority,
