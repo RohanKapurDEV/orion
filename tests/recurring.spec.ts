@@ -3,15 +3,13 @@ import { Program } from "@project-serum/anchor";
 import { Recurring } from "../target/types/recurring";
 import {
   TOKEN_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
   createMint,
   mintToChecked,
   createAccount,
 } from "@solana/spl-token";
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
-import { bnTo8, bnTo1, delay } from "./utils";
+import { bnTo1, delay } from "./utils";
 import BN from "bn.js";
-import { assert } from "chai";
 
 describe("recurring", async () => {
   const provider = anchor.Provider.env();
@@ -253,6 +251,23 @@ describe("recurring", async () => {
         .signers([authority])
         .rpc();
     });
+
+    await delay(2000).then(async () => {
+      let tx = await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
   });
 
   it("Accept MerchantAuthority account!", async () => {
@@ -262,6 +277,40 @@ describe("recurring", async () => {
         payer: newAuthority.publicKey,
         merchantAuthority: merchantAuthority,
         initAuthority: authority.publicKey,
+      })
+      .signers([newAuthority])
+      .rpc();
+  });
+
+  it("Merchant can withdraw payments collected from consumers", async () => {
+    let x = await createAccount(
+      provider.connection,
+      payer,
+      paymentMint,
+      newAuthority.publicKey
+    );
+
+    let withdrawFromMerchantTokenAccountParams = {
+      paymentConfigIndex: 0,
+      merchantAuthorityIndex: 0,
+      amountToWithdraw: 20 * Math.pow(10, mintDecimals),
+    };
+
+    await program.methods
+      .withdrawFromMerchantTokenAccount(
+        withdrawFromMerchantTokenAccountParams.paymentConfigIndex,
+        withdrawFromMerchantTokenAccountParams.merchantAuthorityIndex,
+        new BN(withdrawFromMerchantTokenAccountParams.amountToWithdraw)
+      )
+      .accounts({
+        payer: newAuthority.publicKey,
+        paymentMetadata: paymentMetadata,
+        merchantAuthority: merchantAuthority,
+        paymentConfig: paymentConfig,
+        paymentTokenAccount: paymentTokenAccount.publicKey,
+        receiverTokenAccount: x,
+        initAuthority: authority.publicKey,
+        tokenProgram: TOKEN_PROGRAM_ID,
       })
       .signers([newAuthority])
       .rpc();
