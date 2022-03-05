@@ -9,24 +9,20 @@ pub struct WithdrawFromMerchantTokenAccount<'info> {
     pub payer: Signer<'info>,
 
     #[account(
-        mut,
-        seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
-        bump,
-        constraint = payment_metadata.payment_config == payment_config.key(),
-        close = payer
+        // seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
+        // bump,
+        constraint = payment_metadata.payment_config == payment_config.key() @ ErrorCode::IncorrectPaymentConfigAccount,
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
     #[account(
-        mut,
-        seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
+        seeds = [b"merchant_authority".as_ref(), &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
         bump,
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
     #[account(
-        mut,
-        seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
+        seeds = [b"payment_config".as_ref(), &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
         bump,
         constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectMerchantAuthority,
         constraint = payment_metadata.payment_config == payment_config.key() @ ErrorCode::IncorrectPaymentConfigAccount
