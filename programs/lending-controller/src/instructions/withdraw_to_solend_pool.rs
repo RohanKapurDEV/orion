@@ -1,8 +1,11 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Token, TokenAccount};
+use recurring::cpi::accounts::WithdrawFromMerchantTokenAccount;
 use recurring::program::Recurring;
 use recurring::{self, error::*, state::*};
-use recurring::{cpi::accounts::*, instructions::WithdrawFromMerchantTokenAccount};
+
+// If you're using rust-analyzer with VSCode, ignore the import errors at the top here.
+// The code compiles just fine. r-a just acts up about the imports for some reason :)
 
 #[derive(Accounts)]
 #[instruction(payment_config_index: u8, merchant_authority_index: u8, amount_to_withdraw: u64)]
@@ -57,15 +60,15 @@ impl<'info> WithdrawToSolendPool<'info> {
     ) -> CpiContext<'_, '_, '_, 'info, WithdrawFromMerchantTokenAccount<'info>> {
         let cpi_program = self.recurring_program.to_account_info();
         let cpi_accounts = WithdrawFromMerchantTokenAccount {
-            payer: self.payer.clone(),
-            metadata_owner: self.metadata_owner.clone(),
-            payment_metadata: self.payment_metadata.clone(),
-            merchant_authority: self.merchant_authority.clone(),
-            payment_config: self.payment_config.clone(),
-            payment_token_account: self.payment_token_account.clone(),
-            receiver_token_account: self.receiver_token_account.clone(),
-            init_authority: self.init_authority.clone(),
-            token_program: self.token_program.clone(),
+            payer: self.payer.to_account_info(),
+            metadata_owner: self.metadata_owner.to_account_info(),
+            payment_metadata: self.payment_metadata.to_account_info(),
+            merchant_authority: self.merchant_authority.to_account_info(),
+            payment_config: self.payment_config.to_account_info(),
+            payment_token_account: self.payment_token_account.to_account_info(),
+            receiver_token_account: self.receiver_token_account.to_account_info(),
+            init_authority: self.init_authority.to_account_info(),
+            token_program: self.token_program.to_account_info(),
         };
 
         CpiContext::new(cpi_program, cpi_accounts)
@@ -79,6 +82,12 @@ pub fn handler(
     amount_to_withdraw: u64,
 ) -> ProgramResult {
     // Step 1: Call CPI on recurring program
+    recurring::cpi::withdraw_from_merchant_token_account(
+        ctx.accounts.set_data_ctx(),
+        payment_config_index,
+        merchant_authority_index,
+        amount_to_withdraw,
+    );
 
     // Step 2: Call CPI on solend to deposit from receiver_token_account
 
