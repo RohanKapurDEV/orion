@@ -17,3 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.21.0"
+recurring = { path = "../recurring", features = ["cpi"] }
