@@ -19,4 +19,4 @@ default = []
 anchor-lang = "0.21.0"
 anchor-spl = "0.21.0"
 recurring = { path = "../recurring", features = ["cpi"] }
-jet = { git = "https://github.com/jet-lab/jet-v1", version = "0.2.0", features=["no-entrypoint", "cpi"] }
+port-anchor-adaptor = "0.3.3"
