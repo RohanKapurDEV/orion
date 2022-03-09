@@ -87,7 +87,9 @@ pub fn handler(
         payment_config_index,
         merchant_authority_index,
         amount_to_withdraw,
-    );
+    )?;
+
+    let lending_token_account = &mut ctx.accounts.receiver_token_account;
 
     // Step 2: Call CPI on solend to deposit from receiver_token_account
 
