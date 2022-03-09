@@ -19,4 +19,3 @@ default = []
 anchor-lang = "0.21.0"
 anchor-spl = "0.21.0"
 recurring = { path = "../recurring", features = ["cpi"] }
-port-anchor-adaptor = "0.3.3"
