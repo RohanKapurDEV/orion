@@ -1,6 +1,13 @@
 use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 
+#[event]
+pub struct CloseMerchantAuthorityEvent {
+    pub merchant_authority: Pubkey,
+    pub closing_authority: Pubkey,
+    pub timestamp: i64,
+}
+
 #[derive(Accounts)]
 #[instruction(index: u8)]
 pub struct CloseMerchantAuthority<'info> {
@@ -19,6 +26,15 @@ pub struct CloseMerchantAuthority<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(_ctx: Context<CloseMerchantAuthority>, _index: u8) -> ProgramResult {
+pub fn handler(ctx: Context<CloseMerchantAuthority>, _index: u8) -> ProgramResult {
+    let clock = Clock::get()?;
+    let unix_timestamp = clock.unix_timestamp;
+
+    emit!(CloseMerchantAuthorityEvent {
+        merchant_authority: ctx.accounts.merchant_authority.key(),
+        closing_authority: ctx.accounts.payer.key(),
+        timestamp: unix_timestamp
+    });
+
     Ok(())
 }
