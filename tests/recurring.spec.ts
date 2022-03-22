@@ -14,7 +14,6 @@ import BN from "bn.js";
 describe("recurring", async () => {
   const provider = anchor.Provider.env();
 
-  anchor.setProvider(anchor.Provider.env());
   anchor.Provider.local(undefined, {
     commitment: "finalized",
     preflightCommitment: "finalized",

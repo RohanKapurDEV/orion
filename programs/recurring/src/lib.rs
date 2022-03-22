@@ -6,7 +6,7 @@ pub mod state;
 
 use instructions::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("8nm8dJ87ALofhWisrCfpaEAuanERQBwtThmfW7H9HFL9");
 
 #[program]
 pub mod recurring {
