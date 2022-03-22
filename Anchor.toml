@@ -1,8 +1,7 @@
 [features]
 seeds = false
 [programs.localnet]
-recurring = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
-lending_controller = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+recurring = "8nm8dJ87ALofhWisrCfpaEAuanERQBwtThmfW7H9HFL9"
 
 [registry]
 url = "https://anchor.projectserum.com"
