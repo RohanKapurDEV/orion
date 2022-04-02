@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum ErrorCode {
+pub enum RecurringError {
     #[msg("Invalid delay format")]
     InvalidDelayFormat,
     #[msg("Incorrect mint")]
