@@ -32,7 +32,7 @@ pub struct CollectPayment<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn handler(ctx: Context<CollectPayment>) -> ProgramResult {
+pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
     let payment_config = &mut ctx.accounts.payment_config;
     let owner_payment_account = &mut ctx.accounts.owner_payment_account;
     let payment_metadata = &mut ctx.accounts.payment_metadata;

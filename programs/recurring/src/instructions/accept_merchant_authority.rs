@@ -22,7 +22,7 @@ pub struct AcceptMerchantAuthority<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<AcceptMerchantAuthority>, _index: u8) -> ProgramResult {
+pub fn handler(ctx: Context<AcceptMerchantAuthority>, _index: u8) -> Result<()> {
     let merchant_authority = &mut ctx.accounts.merchant_authority;
     let new_authority = &mut ctx.accounts.payer;
 

@@ -46,7 +46,7 @@ pub fn handler(
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
     amount_to_collect_per_period: u64,
-) -> ProgramResult {
+) -> Result<()> {
     let bump = *ctx.bumps.get("payment_config").unwrap();
     let payment_config = &mut ctx.accounts.payment_config;
 

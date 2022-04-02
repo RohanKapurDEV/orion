@@ -26,7 +26,7 @@ pub struct CloseMerchantAuthority<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<CloseMerchantAuthority>, _index: u8) -> ProgramResult {
+pub fn handler(ctx: Context<CloseMerchantAuthority>, _index: u8) -> Result<()> {
     let clock = Clock::get()?;
     let unix_timestamp = clock.unix_timestamp;
 

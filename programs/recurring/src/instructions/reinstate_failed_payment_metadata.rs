@@ -33,7 +33,7 @@ pub struct ReinstateFailedPaymentMetadata<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<ReinstateFailedPaymentMetadata>) -> ProgramResult {
+pub fn handler(ctx: Context<ReinstateFailedPaymentMetadata>) -> Result<()> {
     let clock = Clock::get()?;
     let unix_timestamp = clock.unix_timestamp;
 

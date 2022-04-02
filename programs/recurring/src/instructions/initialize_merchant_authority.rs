@@ -20,7 +20,7 @@ pub struct InitializeMerchantAuthority<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<InitializeMerchantAuthority>, index: u8) -> ProgramResult {
+pub fn handler(ctx: Context<InitializeMerchantAuthority>, index: u8) -> Result<()> {
     let bump = *ctx.bumps.get("merchant_authority").unwrap();
     let merchant_authority = &mut ctx.accounts.merchant_authority;
 

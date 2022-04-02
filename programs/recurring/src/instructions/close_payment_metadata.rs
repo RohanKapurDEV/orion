@@ -49,7 +49,7 @@ pub fn handler(
     ctx: Context<ClosePaymentMetadata>,
     _payment_config_index: u8,
     _merchant_authority_index: u8,
-) -> ProgramResult {
+) -> Result<()> {
     if let COption::Some(_x) = ctx.accounts.owner_payment_account.delegate {
         let ix = revoke(
             &ctx.accounts.token_program.key(),

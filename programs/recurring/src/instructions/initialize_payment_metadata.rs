@@ -40,7 +40,7 @@ pub struct InitializePaymentMetadata<'info> {
 }
 
 // In most cases, amount_delegated should be some multiple of payment_config.amount_to_collect_per_period
-pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -> ProgramResult {
+pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -> Result<()> {
     let bump = *ctx.bumps.get("payment_metadata").unwrap();
     let payment_metadata = &mut ctx.accounts.payment_metadata;
     let payment_config = &mut ctx.accounts.payment_config;

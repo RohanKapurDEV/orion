@@ -16,7 +16,7 @@ pub struct TransferMerchantAuthority<'info> {
     pub proposed_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(ctx: Context<TransferMerchantAuthority>, _index: u8) -> ProgramResult {
+pub fn handler(ctx: Context<TransferMerchantAuthority>, _index: u8) -> Result<()> {
     let merchant_authority = &mut ctx.accounts.merchant_authority;
     let proposed_authority = &mut ctx.accounts.proposed_authority;
 

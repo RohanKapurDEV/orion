@@ -53,7 +53,7 @@ pub fn handler(
     _payment_config_index: u8,
     merchant_authority_index: u8,
     amount_to_withdraw: u64,
-) -> ProgramResult {
+) -> Result<()> {
     let merchant_auth_bump = *ctx.bumps.get("merchant_authority").unwrap();
     let init_authority_key = ctx.accounts.init_authority.key();
 
