@@ -7,7 +7,7 @@ use spl_token::instruction::revoke;
 #[derive(Accounts)]
 #[instruction(payment_config_index: u8, merchant_authority_index: u8)]
 pub struct ClosePaymentMetadata<'info> {
-    #[account(mut, constraint = payer.key() == payment_metadata.owner @ ErrorCode::IncorrectAuthority)]
+    #[account(mut, constraint = payer.key() == payment_metadata.owner @ RecurringError::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     #[account(
@@ -19,7 +19,7 @@ pub struct ClosePaymentMetadata<'info> {
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
-    #[account(mut, constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ ErrorCode::IncorrectOwnerPaymentAccount)]
+    #[account(mut, constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ RecurringError::IncorrectOwnerPaymentAccount)]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
     #[account(
@@ -31,12 +31,12 @@ pub struct ClosePaymentMetadata<'info> {
     #[account(
         seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
         bump,
-        constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectMerchantAuthority,
-        constraint = payment_metadata.payment_config == payment_config.key() @ ErrorCode::IncorrectPaymentConfigAccount
+        constraint = payment_config.merchant_authority == merchant_authority.key() @ RecurringError::IncorrectMerchantAuthority,
+        constraint = payment_metadata.payment_config == payment_config.key() @ RecurringError::IncorrectPaymentConfigAccount
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ ErrorCode::IncorrectInitAuthority)]
+    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 
     #[account(seeds = [b"program", b"signer"], bump)]

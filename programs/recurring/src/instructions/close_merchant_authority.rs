@@ -22,7 +22,7 @@ pub struct CloseMerchantAuthority<'info> {
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
-    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ ErrorCode::IncorrectInitAuthority)]
+    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 }
 

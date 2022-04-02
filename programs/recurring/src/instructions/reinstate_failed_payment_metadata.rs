@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 pub struct ReinstateFailedPaymentMetadata<'info> {
-    #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectAuthority)]
+    #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     #[account(
@@ -25,11 +25,11 @@ pub struct ReinstateFailedPaymentMetadata<'info> {
         mut,
         seeds = [b"payment_config", payment_config.key().as_ref(), merchant_authority.key().as_ref()],
         bump,
-        constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectAuthorityForPaymentConfig
+        constraint = payment_config.merchant_authority == merchant_authority.key() @ RecurringError::IncorrectAuthorityForPaymentConfig
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ ErrorCode::IncorrectInitAuthority)]
+    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 }
 
@@ -44,7 +44,7 @@ pub fn handler(ctx: Context<ReinstateFailedPaymentMetadata>) -> Result<()> {
         payment_metadata.payment_failure = false;
         payment_metadata.payments_collected = 0;
     } else {
-        return Err(ErrorCode::PaymentMetadataNotInFailedState.into());
+        return Err(RecurringError::PaymentMetadataNotInFailedState.into());
     }
 
     Ok(())

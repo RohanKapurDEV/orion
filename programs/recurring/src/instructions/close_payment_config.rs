@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 #[derive(Accounts)]
 #[instruction(index: u8)]
 pub struct ClosePaymentConfig<'info> {
-    #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectAuthority)]
+    #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     pub merchant_authority: Account<'info, MerchantAuthority>,
@@ -13,12 +13,12 @@ pub struct ClosePaymentConfig<'info> {
         mut,
         seeds = [b"payment_config", &index.to_le_bytes(),  merchant_authority.key().as_ref()],
         bump,
-        constraint = payment_config.merchant_authority == merchant_authority.key() @ ErrorCode::IncorrectAuthorityForPaymentConfig,        
+        constraint = payment_config.merchant_authority == merchant_authority.key() @ RecurringError::IncorrectAuthorityForPaymentConfig,        
         close = init_authority
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ ErrorCode::IncorrectInitAuthority)]
+    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 }
 

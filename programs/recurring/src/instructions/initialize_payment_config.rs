@@ -11,7 +11,7 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
     _amount_to_collect_per_period: u64
 )]
 pub struct InitializePaymentConfig<'info> {
-    #[account(mut, constraint = payer.key() == merchant_auth.current_authority @ ErrorCode::IncorrectAuthorityForPaymentConfig)]
+    #[account(mut, constraint = payer.key() == merchant_auth.current_authority @ RecurringError::IncorrectAuthorityForPaymentConfig)]
     pub payer: Signer<'info>,
 
     #[account(

@@ -4,24 +4,24 @@ use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
 
 #[derive(Accounts)]
 pub struct CollectPayment<'info> {
-    #[account(constraint = payer.key() == merchant_authority.current_authority @ ErrorCode::IncorrectCollectionAuthority)]
+    #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectCollectionAuthority)]
     pub payer: Signer<'info>, // This account is the merchant_authority.current_authority
 
     #[account(constraint = merchant_authority.key() == payment_config.merchant_authority)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
-    #[account(constraint = payment_config.key() == payment_metadata.payment_config @ ErrorCode::IncorrectPaymentConfigAccount)]
+    #[account(constraint = payment_config.key() == payment_metadata.payment_config @ RecurringError::IncorrectPaymentConfigAccount)]
     pub payment_config: Account<'info, PaymentConfig>,
 
     #[account(mut)]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
-    #[account(mut, constraint = payment_token_account.key() == payment_config.payment_token_account @ ErrorCode::IncorrectPaymentTokenAccount)]
+    #[account(mut, constraint = payment_token_account.key() == payment_config.payment_token_account @ RecurringError::IncorrectPaymentTokenAccount)]
     pub payment_token_account: Account<'info, TokenAccount>,
 
     #[account(
         mut,
-        constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ ErrorCode::IncorrectOwnerPaymentAccount,
+        constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ RecurringError::IncorrectOwnerPaymentAccount,
         constraint = owner_payment_account.delegate.unwrap() == program_as_signer.key()
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
@@ -43,7 +43,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
 
     require!(
         delegated_amount >= amount_being_spent,
-        ErrorCode::InsufficientBalanceToDelegate
+        RecurringError::InsufficientBalanceToDelegate
     );
 
     let clock = Clock::get()?;
@@ -65,7 +65,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
 
     require!(
         base_value <= current_timestamp,
-        ErrorCode::PaymentUnauthorized
+        RecurringError::PaymentUnauthorized
     );
 
     let transfer_accounts = Transfer {

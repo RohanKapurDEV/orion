@@ -20,15 +20,15 @@ pub struct InitializePaymentMetadata<'info> {
 
     #[account(
         mut,
-        constraint = owner_payment_account.mint == payment_config.payment_mint @ ErrorCode::IncorrectMint,
-        constraint = owner_payment_account.amount >= amount_delegated @ ErrorCode::InsufficientBalanceToDelegate,
-        constraint = owner_payment_account.owner == payer.key() @ ErrorCode::IncorrectAuthority
+        constraint = owner_payment_account.mint == payment_config.payment_mint @ RecurringError::IncorrectMint,
+        constraint = owner_payment_account.amount >= amount_delegated @ RecurringError::InsufficientBalanceToDelegate,
+        constraint = owner_payment_account.owner == payer.key() @ RecurringError::IncorrectAuthority
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
     #[account(
         mut,
-        constraint = payment_token_account.key() == payment_config.payment_token_account @ ErrorCode::IncorrectPaymentTokenAccount
+        constraint = payment_token_account.key() == payment_config.payment_token_account @ RecurringError::IncorrectPaymentTokenAccount
     )]
     pub payment_token_account: Account<'info, TokenAccount>,
 
@@ -52,7 +52,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
     // Enforce amount being delegated is enough for at least 1 payment
     require!(
         amount_delegated >= payment_config.amount_to_collect_per_period,
-        ErrorCode::AmountToDelegateIsSmallerThanMinimum
+        RecurringError::AmountToDelegateIsSmallerThanMinimum
     );
 
     if payment_config.collect_on_init == true {

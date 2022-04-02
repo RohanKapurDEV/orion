@@ -12,13 +12,13 @@ pub struct AcceptMerchantAuthorityEvent {
 #[derive(Accounts)]
 #[instruction(index: u8)]
 pub struct AcceptMerchantAuthority<'info> {
-    #[account(constraint = payer.key() == merchant_authority.pending_authority @ ErrorCode::IncorrectAuthority)]
+    #[account(constraint = payer.key() == merchant_authority.pending_authority @ RecurringError::IncorrectAuthority)]
     pub payer: Signer<'info>,
 
     #[account(mut, seeds = [b"merchant_authority".as_ref(), &index.to_le_bytes(), init_authority.key().as_ref()], bump)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
-    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ ErrorCode::IncorrectInitAuthority)]
+    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 }
 
