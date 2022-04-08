@@ -15,6 +15,7 @@ pub struct InitializeMerchantAuthority<'info> {
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
+    /// CHECK: only used as field in merchant_authority account
     pub authority: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,

@@ -18,6 +18,7 @@ pub struct ClosePaymentConfig<'info> {
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
+    /// CHECK: not used in instruction logic, just as close target for payment_config. validated in constraint
     #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 }

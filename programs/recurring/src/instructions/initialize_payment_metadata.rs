@@ -32,6 +32,7 @@ pub struct InitializePaymentMetadata<'info> {
     )]
     pub payment_token_account: Account<'info, TokenAccount>,
 
+    /// CHECK: program signer PDA
     #[account(seeds = [b"program", b"signer"], bump)]
     pub program_as_signer: UncheckedAccount<'info>,
 

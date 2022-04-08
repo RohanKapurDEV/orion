@@ -10,9 +10,11 @@ pub struct TransferMerchantAuthority<'info> {
     #[account(mut, seeds = [b"merchant_authority".as_ref(), &index.to_le_bytes(), init_authority.key().as_ref()], bump)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
+    /// CHECK: not used in instruction logic, just as close target for merchant_authority. validated in constraint
     #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 
+    /// CHECK: does not need validation, ix can only be called by current authority
     pub proposed_authority: UncheckedAccount<'info>,
 }
 

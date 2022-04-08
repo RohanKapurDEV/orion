@@ -8,6 +8,7 @@ pub struct WithdrawFromMerchantTokenAccount<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectAuthority )]
     pub payer: Signer<'info>,
 
+    /// CHECK: validated in constraint
     #[account(constraint = metadata_owner.key() == payment_metadata.owner)]
     pub metadata_owner: UncheckedAccount<'info>,
 
@@ -42,6 +43,7 @@ pub struct WithdrawFromMerchantTokenAccount<'info> {
     #[account(mut, constraint = receiver_token_account.mint == payment_config.payment_mint @ RecurringError::IncorrectMint)]
     pub receiver_token_account: Account<'info, TokenAccount>,
 
+    /// CHECK: not used in instruction logic, just as seed for various accounts. validated in constraint
     #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 

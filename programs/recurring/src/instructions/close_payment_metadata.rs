@@ -36,9 +36,11 @@ pub struct ClosePaymentMetadata<'info> {
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
+    /// CHECK: not used in instruction logic, just as seed for merchant_authority. validated in constraint
     #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 
+    /// CHECK: program signer PDA
     #[account(seeds = [b"program", b"signer"], bump)]
     pub program_as_signer: UncheckedAccount<'info>,
 

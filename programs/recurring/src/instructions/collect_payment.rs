@@ -5,7 +5,7 @@ use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
 #[derive(Accounts)]
 pub struct CollectPayment<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectCollectionAuthority)]
-    pub payer: Signer<'info>, // This account is the merchant_authority.current_authority
+    pub payer: Signer<'info>,
 
     #[account(constraint = merchant_authority.key() == payment_config.merchant_authority)]
     pub merchant_authority: Account<'info, MerchantAuthority>,
@@ -26,6 +26,7 @@ pub struct CollectPayment<'info> {
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
+    /// CHECK: program signer PDA
     #[account(seeds = [b"program", b"signer"], bump)]
     pub program_as_signer: UncheckedAccount<'info>,
 
