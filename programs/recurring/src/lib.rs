@@ -75,8 +75,12 @@ pub mod recurring {
         )
     }
 
-    pub fn close_payment_config(ctx: Context<ClosePaymentConfig>, index: u8) -> Result<()> {
-        instructions::close_payment_config::handler(ctx, index)
+    pub fn close_payment_config(
+        ctx: Context<ClosePaymentConfig>,
+        index: u8,
+        merchant_authority_index: u8,
+    ) -> Result<()> {
+        instructions::close_payment_config::handler(ctx, index, merchant_authority_index)
     }
 
     pub fn reinstate_failed_payment_metadata(
