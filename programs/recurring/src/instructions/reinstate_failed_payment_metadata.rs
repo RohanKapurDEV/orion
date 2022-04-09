@@ -40,7 +40,7 @@ pub fn handler(ctx: Context<ReinstateFailedPaymentMetadata>) -> Result<()> {
 
     let payment_metadata = &mut ctx.accounts.payment_metadata;
 
-    if payment_metadata.payment_failure == true {
+    if payment_metadata.payment_failure {
         payment_metadata.created_at = unix_timestamp;
         payment_metadata.payment_failure = false;
         payment_metadata.payments_collected = 0;

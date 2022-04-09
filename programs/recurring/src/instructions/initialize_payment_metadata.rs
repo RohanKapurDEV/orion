@@ -57,7 +57,7 @@ pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -
         RecurringError::AmountToDelegateIsSmallerThanMinimum
     );
 
-    if payment_config.collect_on_init == true {
+    if payment_config.collect_on_init {
         let transfer_accounts = Transfer {
             from: ctx.accounts.owner_payment_account.to_account_info(),
             to: ctx.accounts.payment_token_account.to_account_info(),
