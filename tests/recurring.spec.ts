@@ -335,7 +335,7 @@ describe("recurring", async () => {
 
   it("Close PaymentConfig account!", async () => {
     await program.methods
-      .closePaymentConfig(paymentConfigIndex)
+      .closePaymentConfig(paymentConfigIndex, merchantAuthorityIndex)
       .accounts({
         payer: newAuthority.publicKey,
         merchantAuthority: merchantAuthority,
