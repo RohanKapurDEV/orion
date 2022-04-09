@@ -26,6 +26,10 @@ describe("recurring", async () => {
   const payer = anchor.web3.Keypair.generate();
   const authority = anchor.web3.Keypair.generate();
 
+  // Update these together
+  const delayInSeconds = 10;
+  const delayInMilliseconds = 10000;
+
   let [merchantAuthority, _merchantAuthorityBump] =
     await anchor.web3.PublicKey.findProgramAddress(
       [
@@ -134,7 +138,7 @@ describe("recurring", async () => {
 
     let paymentConfigParams = {
       index: 0,
-      spacingPeriod: 2,
+      spacingPeriod: delayInSeconds,
       collectOnInit: true,
       amountToCollectOnInit: 10 * Math.pow(10, mintDecimals),
       amountToCollectPerPeriod: 10 * Math.pow(10, mintDecimals),
@@ -179,14 +183,14 @@ describe("recurring", async () => {
       ownerPaymentAccount,
       payer,
       10000000000,
-      6
+      mintDecimals
     );
 
     let paymentMetadataParams = {
-      amountDelegated: 30 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
+      amountDelegated: 50 * Math.pow(10, mintDecimals), // Must match paymentConfigParams.amountToCollectPerPeriod
     };
 
-    let tx = await program.methods
+    await program.methods
       .initializePaymentMetadata(new BN(paymentMetadataParams.amountDelegated))
       .accounts({
         payer: consumer.publicKey,
@@ -217,7 +221,24 @@ describe("recurring", async () => {
 
   it("Collect payment from PaymentMetadata account!", async () => {
     // Delay by paymentConfig.spacerPeriod
-    await delay(2000).then(async () => {
+    await delay(delayInMilliseconds).then(async () => {
+      await program.methods
+        .collectPayment()
+        .accounts({
+          payer: authority.publicKey,
+          merchantAuthority: merchantAuthority,
+          paymentConfig: paymentConfig,
+          paymentMetadata: paymentMetadata,
+          ownerPaymentAccount: ownerPaymentAccount,
+          paymentTokenAccount: paymentTokenAccount.publicKey,
+          programAsSigner: programAsSigner,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([authority])
+        .rpc();
+    });
+
+    await delay(delayInMilliseconds).then(async () => {
       let tx = await program.methods
         .collectPayment()
         .accounts({
@@ -234,24 +255,7 @@ describe("recurring", async () => {
         .rpc();
     });
 
-    await delay(2000).then(async () => {
-      let tx = await program.methods
-        .collectPayment()
-        .accounts({
-          payer: authority.publicKey,
-          merchantAuthority: merchantAuthority,
-          paymentConfig: paymentConfig,
-          paymentMetadata: paymentMetadata,
-          ownerPaymentAccount: ownerPaymentAccount,
-          paymentTokenAccount: paymentTokenAccount.publicKey,
-          programAsSigner: programAsSigner,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .signers([authority])
-        .rpc();
-    });
-
-    await delay(2000).then(async () => {
+    await delay(delayInMilliseconds).then(async () => {
       let tx = await program.methods
         .collectPayment()
         .accounts({
