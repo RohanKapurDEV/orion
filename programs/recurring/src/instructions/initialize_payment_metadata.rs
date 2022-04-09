@@ -12,7 +12,8 @@ pub struct InitializePaymentMetadata<'info> {
         init,
         payer = payer,
         seeds = [b"payment_metadata".as_ref(), payer.key().as_ref(), payment_config.key().as_ref()],
-        bump
+        bump,
+        space = 8 + 32 + 32 + 32 + 1 + 8 + 8 + 8 + 1 + 1
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 

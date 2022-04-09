@@ -11,7 +11,8 @@ pub struct InitializeMerchantAuthority<'info> {
         init,
         payer = payer,
         seeds = [b"merchant_authority".as_ref(), &index.to_le_bytes(), authority.key().as_ref()],
-        bump
+        bump,
+        space = 8 + 32 + 32 + 32 + 1 + 1
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
