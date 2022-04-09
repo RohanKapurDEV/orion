@@ -1,6 +1,7 @@
 use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
+use std::convert::TryFrom;
 
 #[derive(Accounts)]
 pub struct CollectPayment<'info> {
@@ -55,7 +56,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
 
     let applied_payments_collected = payment_metadata
         .payments_collected
-        .checked_add(1 as u16)
+        .checked_add(u16::try_from(1).unwrap())
         .unwrap();
 
     let time_delta = spacing_period
@@ -101,7 +102,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
 
     payment_metadata.payments_collected = payment_metadata
         .payments_collected
-        .checked_add(1 as u16)
+        .checked_add(u16::try_from(1).unwrap())
         .unwrap();
 
     Ok(())
