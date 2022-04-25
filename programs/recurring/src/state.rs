@@ -32,7 +32,6 @@ pub struct PaymentMetadata {
     pub payment_config: Pubkey,
     pub owner_payment_account: Pubkey,
     pub amount_delegated: u64,
-    pub payment_failure: bool,
     pub payments_collected: u16,
     pub bump: u8,
 }

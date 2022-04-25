@@ -90,15 +90,7 @@ pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
         signer,
     );
 
-    let transfer_attempt = transfer(cpi_ctx, amount_being_spent);
-
-    match transfer_attempt {
-        Ok(_x) => (),
-        Err(y) => {
-            payment_metadata.payment_failure = true;
-            return Err(y);
-        }
-    }
+    transfer(cpi_ctx, amount_being_spent)?;
 
     payment_metadata.payments_collected = payment_metadata
         .payments_collected

@@ -83,12 +83,6 @@ pub mod recurring {
         instructions::close_payment_config::handler(ctx, index, merchant_authority_index)
     }
 
-    pub fn reinstate_failed_payment_metadata(
-        ctx: Context<ReinstateFailedPaymentMetadata>,
-    ) -> Result<()> {
-        instructions::reinstate_failed_payment_metadata::handler(ctx)
-    }
-
     // // Consumer instructions
 
     pub fn initialize_payment_metadata(
