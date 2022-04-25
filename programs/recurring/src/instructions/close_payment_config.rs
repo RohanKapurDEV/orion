@@ -14,7 +14,7 @@ pub struct ClosePaymentConfig<'info> {
         mut,
         seeds = [b"payment_config", &index.to_le_bytes(),  merchant_authority.key().as_ref()],
         bump,
-        constraint = payment_config.merchant_authority == merchant_authority.key() @ RecurringError::IncorrectAuthorityForPaymentConfig,        
+        constraint = payment_config.merchant_authority == merchant_authority.key() @ RecurringError::IncorrectAuthorityForPaymentConfig,
         close = init_authority
     )]
     pub payment_config: Account<'info, PaymentConfig>,
@@ -24,6 +24,10 @@ pub struct ClosePaymentConfig<'info> {
     pub init_authority: UncheckedAccount<'info>,
 }
 
-pub fn handler(_ctx: Context<ClosePaymentConfig>, _index: u8, _merchant_authority_index: u8) -> Result<()> {
+pub fn handler(
+    _ctx: Context<ClosePaymentConfig>,
+    _index: u8,
+    _merchant_authority_index: u8,
+) -> Result<()> {
     Ok(())
 }
