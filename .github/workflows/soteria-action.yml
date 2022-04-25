@@ -1,50 +1,32 @@
-name: Soteria Scan
-author: silas
-description: >
-  Test Solana smart contract code for common vulnerabilities
-branding:
-  icon: check-square
-  color: gray-dark
-inputs:
-  solana-version:
-    description: "Choose your Solana version to build with"
-    required: false
-    default: "1.9.5"
-  run-mode:
-    description: "Command line options for Soteria"
-    required: false
-    default: "-analyzeAll"
-  cargo-com:
-    description: "Build command shortcut for: cargo +bpf build --target bpfel-unknown-unknown --release"
-    required: false
-    default: "."
-  program-path:
-    description: "Configure the job to run tests against a program in a subfolder to the root"
-    required: false
-    default: "."
+name: CI
 
-runs:
-  using: composite
-  steps:
-    - name: Install Solana
-      run: |
-        echo Installing Solana v${{ inputs.solana-version }}... 🧬
-        sh -c "$(curl -sSfL https://release.solana.com/v${{ inputs.solana-version }}/install)"
-        echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-        export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
-        echo Configuring bpf toolchain...
-        (cd /home/runner/.local/share/solana/install/active_release/bin/sdk/bpf/scripts; ./install.sh)
-      shell: bash
-    - name: Install Soteria
-      run: |
-        echo Installing Soteria... 🔬
-        sh -c "$(curl -k https://supercompiler.xyz/install)"
-        export PATH=$PWD/soteria-linux-develop/bin/:$PATH
-        echo "$PWD/soteria-linux-develop/bin" >> $GITHUB_PATH
-      shell: bash
-    - name: Run Soteria
-      run: |
-        echo Running Soteria... 🚀
-        cd ${{ inputs.program-path }}
-        soteria ${{ inputs.run-mode }} ${{ inputs.cargo-com }}
-      shell: bash
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - id: cache-cli-deps
+        uses: actions/cache@v2
+        with:
+          key: cargo-${{ runner.os }}
+          path: |
+            ~/.local/share/solana
+            ~/.cargo/bin/anchor
+      - id: install-os-deps
+        if: steps.cache-cli-deps.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get upgrade && sudo apt-get install -y pkg-config build-essential libudev-dev
+      - name: install-solana-tools
+        if: steps.cache-cli-deps.outputs.cache-hit != 'true'
+        run: sh -c "$(curl -sSfL https://release.solana.com/v1.9.5/install)"
+      - run: echo "PATH=$HOME/.local/share/solana/install/active_release/bin:$PATH" >> $GITHUB_ENV
+      - id: install-anchor-cli
+        if: steps.cache-cli-deps.outputs.cache-hit != 'true'
+        run: cargo install --git https://github.com/project-serum/anchor --tag v0.21.0 anchor-cli --locked
+      - run: yarn install
+      - run: solana-keygen new --no-bip39-passphrase
+      - run: cargo test
+      - run: anchor build
+      - run: anchor test
