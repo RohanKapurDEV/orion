@@ -24,7 +24,7 @@ jobs:
       - run: echo "PATH=$HOME/.local/share/solana/install/active_release/bin:$PATH" >> $GITHUB_ENV
       - id: install-anchor-cli
         if: steps.cache-cli-deps.outputs.cache-hit != 'true'
-        run: cargo install --git https://github.com/project-serum/anchor --tag v0.21.0 anchor-cli --locked
+        run: cargo install --git https://github.com/project-serum/anchor --tag v0.24.2 anchor-cli --locked
       - run: yarn install
       - run: solana-keygen new --no-bip39-passphrase
       - run: cargo test
