@@ -7,7 +7,7 @@ use spl_token::instruction::revoke;
 #[derive(Accounts)]
 #[instruction(payment_config_index: u8, merchant_authority_index: u8)]
 pub struct ClosePaymentMetadata<'info> {
-    #[account(mut, constraint = payer.key() == payment_metadata.owner @ RecurringError::IncorrectAuthority)]
+    #[account(mut)]
     pub payer: Signer<'info>,
 
     #[account(
@@ -47,6 +47,24 @@ pub struct ClosePaymentMetadata<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+/// Access control check to allow payer to be one of two accounts: Either the owner of the payment_metadata account or the current
+/// authority of the payment_config account
+impl<'info> ClosePaymentMetadata<'info> {
+    fn accounts(ctx: &Context<ClosePaymentMetadata>) -> Result<()> {
+        let payer = ctx.accounts.payer.key();
+
+        let config_authority: Pubkey = ctx.accounts.merchant_authority.current_authority;
+        let metadata_owner: Pubkey = ctx.accounts.payment_metadata.owner;
+
+        if payer != config_authority && payer != metadata_owner {
+            return Err(RecurringError::IncorrectAuthority.into());
+        }
+
+        Ok(())
+    }
+}
+
+#[access_control(ClosePaymentMetadata::accounts(&ctx))]
 pub fn handler(
     ctx: Context<ClosePaymentMetadata>,
     _payment_config_index: u8,
