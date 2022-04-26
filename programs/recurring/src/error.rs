@@ -8,6 +8,8 @@ pub enum RecurringError {
     IncorrectMint,
     #[msg("Incorrect authority")]
     IncorrectAuthority,
+    #[msg("Incorrect owner")]
+    IncorrectOwner,
     #[msg("Incorrect init authority")]
     IncorrectInitAuthority,
     #[msg("Incorrect merchant authority")]
