@@ -57,8 +57,12 @@ pub mod recurring {
         )
     }
 
-    pub fn collect_payment(ctx: Context<CollectPayment>) -> Result<()> {
-        instructions::collect_payment::handler(ctx)
+    pub fn collect_payment(
+        ctx: Context<CollectPayment>,
+        merchant_authority_index: u8,
+        payment_config_index: u8,
+    ) -> Result<()> {
+        instructions::collect_payment::handler(ctx, merchant_authority_index, payment_config_index)
     }
 
     pub fn withdraw_from_merchant_token_account(
@@ -83,7 +87,7 @@ pub mod recurring {
         instructions::close_payment_config::handler(ctx, index, merchant_authority_index)
     }
 
-    // // Consumer instructions
+    // Consumer instructions
 
     pub fn initialize_payment_metadata(
         ctx: Context<InitializePaymentMetadata>,

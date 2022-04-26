@@ -4,17 +4,34 @@ use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
 use std::convert::TryFrom;
 
 #[derive(Accounts)]
+#[instruction(merchant_authority_index: u8, payment_config_index: u8)]
 pub struct CollectPayment<'info> {
     #[account(constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectCollectionAuthority)]
     pub payer: Signer<'info>,
 
-    #[account(constraint = merchant_authority.key() == payment_config.merchant_authority)]
+    #[account(
+        seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
+        bump,
+        constraint = merchant_authority.key() == payment_config.merchant_authority
+    )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
-    #[account(constraint = payment_config.key() == payment_metadata.payment_config @ RecurringError::IncorrectPaymentConfigAccount)]
+    /// CHECK: not used in instruction logic, just as seed for merchant_authority account. validated in constraint
+    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
+    pub init_authority: UncheckedAccount<'info>,
+
+    #[account(
+        seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
+        bump,
+        constraint = payment_config.key() == payment_metadata.payment_config @ RecurringError::IncorrectPaymentConfigAccount
+    )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        seeds = [b"payment_metadata", owner.key().as_ref(), payment_config.key().as_ref()],
+        bump
+    )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
     #[account(mut, constraint = payment_token_account.key() == payment_config.payment_token_account @ RecurringError::IncorrectPaymentTokenAccount)]
@@ -27,6 +44,9 @@ pub struct CollectPayment<'info> {
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
+    #[account(constraint = owner.key() == payment_metadata.owner @ RecurringError::IncorrectOwner)]
+    pub owner: UncheckedAccount<'info>,
+
     /// CHECK: program signer PDA
     #[account(seeds = [b"program", b"signer"], bump)]
     pub program_as_signer: UncheckedAccount<'info>,
@@ -34,7 +54,11 @@ pub struct CollectPayment<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn handler(ctx: Context<CollectPayment>) -> Result<()> {
+pub fn handler(
+    ctx: Context<CollectPayment>,
+    _merchant_authority_index: u8,
+    _payment_config_index: u8,
+) -> Result<()> {
     let payment_config = &mut ctx.accounts.payment_config;
     let owner_payment_account = &mut ctx.accounts.owner_payment_account;
     let payment_metadata = &mut ctx.accounts.payment_metadata;
