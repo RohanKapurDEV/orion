@@ -44,6 +44,7 @@ pub struct CollectPayment<'info> {
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
+    /// CHECK: validated in constraint, not used in instruction logic
     #[account(constraint = owner.key() == payment_metadata.owner @ RecurringError::IncorrectOwner)]
     pub owner: UncheckedAccount<'info>,
 
