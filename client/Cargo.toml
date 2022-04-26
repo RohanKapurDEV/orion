@@ -3,6 +3,7 @@ name = "client"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+recurring = { path = "../programs/recurring", features = ["no-entrypoint"] }
+anchor-client = "0.24.2"
+anchor-spl = "0.24.2"
