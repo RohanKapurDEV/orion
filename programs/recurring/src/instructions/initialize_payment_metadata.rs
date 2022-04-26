@@ -2,6 +2,10 @@ use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{approve, transfer, Approve, Token, TokenAccount, Transfer};
 
+/// Based on the derivation seeds for the PaymentMetadata account, any given pubkey can only hold one PaymentMetadata
+/// account for any given PaymentConfig. If a merchant notices that a payments collection has failed _due to insufficient
+/// balance_, the merchant should close the PaymentMetadata account immediately.
+
 #[derive(Accounts)]
 #[instruction(amount_delegated: u64)]
 pub struct InitializePaymentMetadata<'info> {
