@@ -26,7 +26,7 @@ pub struct InitializePaymentMetadata<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.mint == payment_config.payment_mint @ RecurringError::IncorrectMint,
-        constraint = owner_payment_account.amount >= amount_delegated @ RecurringError::InsufficientBalanceToDelegate,
+        // constraint = owner_payment_account.amount >= amount_delegated @ RecurringError::InsufficientBalanceToDelegate,
         constraint = owner_payment_account.owner == payer.key() @ RecurringError::IncorrectAuthority
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
@@ -45,7 +45,32 @@ pub struct InitializePaymentMetadata<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-// In most cases, amount_delegated should be some multiple of payment_config.amount_to_collect_per_period
+/// Enforce that the owner_payment_account has enough for the amount_delegated + amount_to_collect_on_init (if it exists)
+impl<'info> InitializePaymentMetadata<'info> {
+    fn accounts(ctx: &Context<InitializePaymentMetadata>, amount_delegated: u64) -> Result<()> {
+        let payment_config = &ctx.accounts.payment_config;
+        let minimum_balance_requirement: u64;
+
+        let owner_payment_account = &ctx.accounts.owner_payment_account;
+
+        if payment_config.collect_on_init {
+            minimum_balance_requirement =
+                payment_config.amount_to_collect_on_init + amount_delegated;
+        } else {
+            minimum_balance_requirement = amount_delegated;
+        }
+
+        if owner_payment_account.amount < minimum_balance_requirement {
+            return Err(RecurringError::InsufficientBalanceToDelegate.into());
+        }
+
+        Ok(())
+    }
+}
+
+/// In most cases, amount_delegated should be some multiple of payment_config.amount_to_collect_per_period. This should probably be
+/// enforced at the contract level but for now it seems fine to not implement it.
+#[access_control(InitializePaymentMetadata::accounts(&ctx, amount_delegated))]
 pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -> Result<()> {
     let bump = *ctx.bumps.get("payment_metadata").unwrap();
     let payment_metadata = &mut ctx.accounts.payment_metadata;
