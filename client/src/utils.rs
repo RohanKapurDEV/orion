@@ -8,3 +8,19 @@ pub const SYSTEM_PROGRAM: &str = "11111111111111111111111111111111";
 pub const DEVNET_RPC_HTTP: &str = "https://api.devnet.solana.com";
 pub const DEVNET_RPC_WS: &str = "wss://api.devnet.solana.com";
 pub const MERCHANT_AUTHORITY_INDEX: u8 = 1;
+
+pub enum NetworkSelector {
+    Mainnet,
+    Devnet,
+}
+
+impl NetworkSelector {
+    pub fn fetch_rpc(self) -> (String, String) {
+        match self {
+            NetworkSelector::Mainnet => return ("".to_string(), "".to_string()),
+            NetworkSelector::Devnet => {
+                return (DEVNET_RPC_HTTP.to_string(), DEVNET_RPC_WS.to_string())
+            }
+        }
+    }
+}
