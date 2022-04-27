@@ -7,3 +7,5 @@ edition = "2021"
 recurring = { path = "../programs/recurring", features = ["no-entrypoint"] }
 anchor-client = "0.24.2"
 anchor-spl = "0.24.2"
+dotenv = "0.15.0"
+tokio = { version = "1.13.0", features = ["full"] }
