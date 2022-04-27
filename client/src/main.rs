@@ -89,6 +89,10 @@ pub async fn initialize_merchant_authority(
 
     let merch_auth: MerchantAuthority = program.account(merchant_authority)?;
 
+    println!(
+        "Merchant authority account: {}",
+        merchant_authority.to_string()
+    );
     println!("Current authority: {}", merch_auth.current_authority);
     println!("Index: {}", merch_auth.index);
 
