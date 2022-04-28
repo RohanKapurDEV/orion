@@ -30,6 +30,9 @@ pub struct MerchantAccountParams {
     /// Novel index - This should be scoped to the init_authority field
     #[clap(short, long)]
     pub index: u8,
+    /// mainnet or devnet
+    #[clap(short, long)]
+    pub network: String,
 }
 
 #[derive(Debug, Args)]

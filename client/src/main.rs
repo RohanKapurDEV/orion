@@ -12,6 +12,7 @@ use std::fs;
 use std::rc::Rc;
 
 mod args;
+mod error;
 mod instructions;
 mod utils;
 
@@ -23,26 +24,14 @@ use utils::*;
 async fn main() {
     dotenv().ok();
 
-    let data =
-        fs::read_to_string("/Users/rohan/.config/solana/id.json").expect("Unable to read file");
-    let json: Vec<u8> = serde_json::from_str(&data).expect("JSON does not have correct format.");
+    let args = ClientArgs::parse();
 
-    let x = json.as_slice();
-
-    let kp = Keypair::from_bytes(x).unwrap();
-
-    println!("{:?}", kp.to_base58_string());
-
-    // let args = ClientArgs::parse();
-
-    // match args {
-    //     ClientArgs { subcommand } => match subcommand {
-    //         EntityType::InitMerchantAccount(params) => {}
-    //         _ => {}
-    //     },
-    // }
-
-    // println!("{:?}", args);
+    match args {
+        ClientArgs { subcommand } => match subcommand {
+            EntityType::InitMerchantAccount(params) => {}
+            _ => {}
+        },
+    }
 
     // Note that this env var should be a base58 string representation of a private key
     // let payer_private_key = env::var("PAYER_PRIVATE_KEY").unwrap();
