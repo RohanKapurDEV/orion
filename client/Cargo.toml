@@ -9,3 +9,5 @@ anchor-client = "0.24.2"
 anchor-spl = "0.24.2"
 dotenv = "0.15.0"
 tokio = { version = "1.13.0", features = ["full"] }
+clap = { version = "3.1.12", features = ["derive"] }
+serde_json = "1.0"
