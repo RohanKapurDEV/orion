@@ -610,6 +610,7 @@ dependencies = [
  "dotenv",
  "recurring",
  "serde_json",
+ "thiserror",
  "tokio",
 ]
 
