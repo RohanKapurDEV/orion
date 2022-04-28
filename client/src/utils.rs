@@ -1,4 +1,11 @@
 use crate::error::AppError;
+use anchor_client::{
+    solana_sdk::{commitment_config::CommitmentConfig, signature::Keypair},
+    Client, Cluster,
+};
+
+use std::fs;
+use std::rc::Rc;
 
 // Some useful constants
 pub const PROGRAM_ID: &str = "CFHiFGAChg829XSFBRhswft7Vnmc9tQdR3Esiqcxmeef";
@@ -12,6 +19,19 @@ pub const DEVNET_RPC_WS: &str = "wss://api.devnet.solana.com";
 pub const MAINNET_RPC_HTTP: &str = "";
 pub const MAINNET_RPC_WS: &str = "";
 pub const MERCHANT_AUTHORITY_INDEX: u8 = 2;
+
+pub fn build_client(keypair_path: String, network: String) -> Client {
+    let network_selector = validate_network(network).unwrap();
+    let rpc = network_selector.fetch_rpc();
+
+    let data = fs::read_to_string(keypair_path).expect("Unable to read file");
+    let json: Vec<u8> = serde_json::from_str(&data).expect("JSON does not have correct format.");
+
+    let signer = Keypair::from_bytes(json.as_slice()).unwrap();
+
+    let cluster = Cluster::Custom(rpc.0.to_string(), rpc.1.to_string());
+    Client::new_with_options(cluster, Rc::new(signer), CommitmentConfig::processed())
+}
 
 #[allow(dead_code)]
 pub enum NetworkSelector {

@@ -54,7 +54,7 @@ pub async fn initialize_merchant_authority(
 
     println!("Successfully initialized MerchantAuthority account!");
 
-    println!("TX Sig: {}", tx.to_string());
+    println!("Tx Sig: {}", tx.to_string());
 
     println!(
         "Merchant authority account address: {}",
