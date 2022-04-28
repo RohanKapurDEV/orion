@@ -4,6 +4,8 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 
 /// An important thing to note is that if a MerchantAuthority intends on issuing multiple PaymentConfigs, they need to keep track of the
 /// current index; it's a number that refers to the amount of PaymentConfigs issued by a specific MerchantAuthority account.
+///
+/// Another gotcha here is when a MerchantAuthority does switch out it's current authority,
 
 #[derive(Accounts)]
 #[instruction(
