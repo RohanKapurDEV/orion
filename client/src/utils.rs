@@ -3,11 +3,9 @@ use anchor_client::{
     solana_sdk::{commitment_config::CommitmentConfig, signature::Keypair},
     Client, Cluster,
 };
-
 use std::fs;
 use std::rc::Rc;
 
-// Some useful constants
 pub const PROGRAM_ID: &str = "CFHiFGAChg829XSFBRhswft7Vnmc9tQdR3Esiqcxmeef";
 pub const PAYER: &str = "4puafxtL1437aibBy4pCteADWjja9aQvygD9LhkwRMG5";
 pub const TOKEN_PROGRAM: &str = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";

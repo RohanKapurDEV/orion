@@ -223,7 +223,7 @@ describe("recurring", async () => {
     // Delay by paymentConfig.spacerPeriod
     await delay(delayInMilliseconds).then(async () => {
       await program.methods
-        .collectPayment()
+        .collectPayment(merchantAuthorityIndex, paymentConfigIndex)
         .accounts({
           payer: authority.publicKey,
           merchantAuthority: merchantAuthority,
@@ -240,7 +240,7 @@ describe("recurring", async () => {
 
     await delay(delayInMilliseconds).then(async () => {
       let tx = await program.methods
-        .collectPayment()
+        .collectPayment(merchantAuthorityIndex, paymentConfigIndex)
         .accounts({
           payer: authority.publicKey,
           merchantAuthority: merchantAuthority,
@@ -257,7 +257,7 @@ describe("recurring", async () => {
 
     await delay(delayInMilliseconds).then(async () => {
       let tx = await program.methods
-        .collectPayment()
+        .collectPayment(merchantAuthorityIndex, paymentConfigIndex)
         .accounts({
           payer: authority.publicKey,
           merchantAuthority: merchantAuthority,

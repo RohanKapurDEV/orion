@@ -21,6 +21,15 @@ async fn main() {
 
                 let client = build_client(keypair_path.clone(), network);
                 let res = initialize_merchant_authority(&client, keypair_path, params.index).await;
+
+                match res {
+                    Ok(_) => {
+                        println!("Successful tx")
+                    }
+                    Err(e) => {
+                        println!("{}", e.to_string())
+                    }
+                }
             }
             _ => {}
         },

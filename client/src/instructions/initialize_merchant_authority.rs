@@ -10,7 +10,6 @@ use std::fs;
 use std::str::FromStr;
 
 #[allow(dead_code)]
-/// Rent + ix cost = 0.00326728 SOL
 pub async fn initialize_merchant_authority(
     client: &Client,
     keypair_path: String,
@@ -29,7 +28,7 @@ pub async fn initialize_merchant_authority(
     let (merchant_authority, _bump) = Pubkey::find_program_address(
         &[
             b"merchant_authority",
-            &MERCHANT_AUTHORITY_INDEX.to_le_bytes(),
+            &index.to_le_bytes(),
             &authority.to_bytes(),
         ],
         &program_id_pubkey,
@@ -42,6 +41,9 @@ pub async fn initialize_merchant_authority(
         system_program: system_program_pubkey,
     };
     let params = recurring_ixs::InitializeMerchantAuthority { index };
+
+    println!("Authority: {} ", authority.to_string());
+    println!("Keypair: {}", payer_signer.to_base58_string());
 
     let tx = program
         .request()
