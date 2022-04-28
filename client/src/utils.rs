@@ -7,8 +7,9 @@ pub const RENT: &str = "SysvarRent111111111111111111111111111111111";
 pub const SYSTEM_PROGRAM: &str = "11111111111111111111111111111111";
 pub const DEVNET_RPC_HTTP: &str = "https://api.devnet.solana.com";
 pub const DEVNET_RPC_WS: &str = "wss://api.devnet.solana.com";
-pub const MERCHANT_AUTHORITY_INDEX: u8 = 1;
+pub const MERCHANT_AUTHORITY_INDEX: u8 = 2;
 
+#[allow(dead_code)]
 pub enum NetworkSelector {
     Mainnet,
     Devnet,
