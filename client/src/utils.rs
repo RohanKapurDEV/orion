@@ -17,6 +17,9 @@ pub const DEVNET_RPC_WS: &str = "wss://api.devnet.solana.com";
 pub const MAINNET_RPC_HTTP: &str = "";
 pub const MAINNET_RPC_WS: &str = "";
 
+pub const INCORRECT_AUTH_FOR_PAYMENT_CONFIG: &str =
+    "Incorrect authority keypair - does not match MerchantAccount.current_authority field";
+
 pub fn build_client(keypair_path: String, network: String) -> Client {
     let network_selector = validate_network(network).unwrap();
     let rpc = network_selector.fetch_rpc();
