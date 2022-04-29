@@ -9,7 +9,6 @@ use recurring::state::*;
 use std::fs;
 use std::str::FromStr;
 
-#[allow(dead_code)]
 pub async fn initialize_merchant_authority(
     client: &Client,
     keypair_path: String,
