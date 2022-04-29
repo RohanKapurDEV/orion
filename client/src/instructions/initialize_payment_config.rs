@@ -56,7 +56,8 @@ pub async fn initialize_payment_config(
         &program_id_pubkey,
     );
 
-    let payment_token_account = Pubkey::new_unique();
+    let payment_token_account_keypair = Keypair::new();
+    let payment_token_account = payment_token_account_keypair.pubkey();
 
     let accounts = recurring_accounts::InitializePaymentConfig {
         payer: authority,
@@ -80,6 +81,7 @@ pub async fn initialize_payment_config(
     let tx = program
         .request()
         .signer(&payer_signer)
+        .signer(&payment_token_account_keypair)
         .accounts(accounts)
         .args(params)
         .send()?;
