@@ -16,7 +16,6 @@ pub const DEVNET_RPC_HTTP: &str = "https://api.devnet.solana.com";
 pub const DEVNET_RPC_WS: &str = "wss://api.devnet.solana.com";
 pub const MAINNET_RPC_HTTP: &str = "";
 pub const MAINNET_RPC_WS: &str = "";
-pub const MERCHANT_AUTHORITY_INDEX: u8 = 2;
 
 pub fn build_client(keypair_path: String, network: String) -> Client {
     let network_selector = validate_network(network).unwrap();

@@ -42,9 +42,6 @@ pub async fn initialize_merchant_authority(
     };
     let params = recurring_ixs::InitializeMerchantAuthority { index };
 
-    println!("Authority: {} ", authority.to_string());
-    println!("Keypair: {}", payer_signer.to_base58_string());
-
     let tx = program
         .request()
         .signer(&payer_signer)
