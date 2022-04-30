@@ -80,4 +80,7 @@ pub struct PaymentMetadataParams {
     /// Amount of tokens delegated to the program_as_signer PDA; Should be some multiple of payment_config.amount_to_collect_per_period
     #[clap(short, long)]
     pub amount_delegated: u64,
+    /// mainnet or devnet
+    #[clap(short, long)]
+    pub network: String,
 }

@@ -54,6 +54,27 @@ async fn main() {
                     }
                 }
             }
+            EntityType::InitPaymentMetadata(params) => {
+                let network = params.network;
+                let keypair_path = params.keypair_path;
+
+                let client = build_client(keypair_path.clone(), network);
+                let res = initialize_payment_metadata(
+                    &client,
+                    keypair_path,
+                    params.merchant_authority,
+                    params.payment_config,
+                    params.amount_delegated,
+                )
+                .await;
+
+                match res {
+                    Ok(_) => {}
+                    Err(e) => {
+                        println!("{}", e.to_string())
+                    }
+                }
+            }
             _ => {}
         },
     }
