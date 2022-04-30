@@ -59,10 +59,10 @@ pub struct PaymentConfigParams {
     #[clap(short, long)]
     pub collect_on_init: bool,
     /// Amount to collect on creation of associated PaymentMetdata
-    #[clap(short, long)]
+    #[clap(short = 'o', long)]
     pub amount_to_collect_on_init: u64,
     /// Amount to collect per period
-    #[clap(short, long)]
+    #[clap(short = 'a', long)]
     pub amount_to_collect_per_period: u64,
 }
 
