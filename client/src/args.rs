@@ -71,4 +71,13 @@ pub struct PaymentMetadataParams {
     /// The path to the JSON keypair to use the sign the transaction
     #[clap(short, long)]
     pub keypair_path: String,
+    /// Address of merchant_authority account
+    #[clap(short, long)]
+    pub merchant_authority: String,
+    /// Address of payment_config account
+    #[clap(short, long)]
+    pub payment_config: String,
+    /// Amount of tokens delegated to the program_as_signer PDA; Should be some multiple of payment_config.amount_to_collect_per_period
+    #[clap(short, long)]
+    pub amount_delegated: u64,
 }
