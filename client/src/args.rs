@@ -49,9 +49,6 @@ pub struct PaymentConfigParams {
     /// Address of merchant_authority account
     #[clap(short, long)]
     pub merchant_authority: String,
-    /// Index of merchant_authority account
-    #[clap(short = 'x', long)]
-    pub merchant_authority_index: u8,
     /// The mint of which to expect tokens from as payment
     #[clap(short, long)]
     pub payment_mint: String,

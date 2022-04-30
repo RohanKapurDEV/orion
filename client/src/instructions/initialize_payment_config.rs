@@ -15,7 +15,6 @@ pub async fn initialize_payment_config(
     merchant_authority: String,
     payment_mint: String,
     index: u8,
-    merchant_authority_index: u8,
     spacing_period: i64,
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
@@ -44,6 +43,7 @@ pub async fn initialize_payment_config(
         program.account(merchant_authority_pubkey)?;
 
     let init_authority_pubkey = merchant_authority_account.init_authority;
+    let merchant_authority_index = merchant_authority_account.index;
 
     if merchant_authority_account.current_authority != authority {
         panic!("{}", INCORRECT_AUTH_FOR_PAYMENT_CONFIG)
