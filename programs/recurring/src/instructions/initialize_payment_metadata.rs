@@ -7,7 +7,7 @@ use anchor_spl::token::{approve, transfer, Approve, Token, TokenAccount, Transfe
 /// collection has failed due to insufficient balance, the merchant should close the PaymentMetadata account immediately
 
 #[derive(Accounts)]
-#[instruction(amount_delegated: u64)]
+#[instruction(amount_delegated: u64, payment_config_index: u8, merchant_authority_index: u8)]
 pub struct InitializePaymentMetadata<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -21,7 +21,23 @@ pub struct InitializePaymentMetadata<'info> {
     )]
     pub payment_metadata: Account<'info, PaymentMetadata>,
 
+    #[account(
+        seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
+        bump,
+        constraint = payment_config.key() == payment_metadata.payment_config @ RecurringError::IncorrectPaymentConfigAccount
+    )]
     pub payment_config: Account<'info, PaymentConfig>,
+
+    #[account(
+        seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
+        bump,
+        constraint = merchant_authority.key() == payment_config.merchant_authority
+    )]
+    pub merchant_authority: Account<'info, MerchantAuthority>,
+
+    /// CHECK: not used in instruction logic, just as seed for merchant_authority account. validated in constraint
+    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
+    pub init_authority: UncheckedAccount<'info>,
 
     #[account(
         mut,
@@ -70,7 +86,12 @@ impl<'info> InitializePaymentMetadata<'info> {
 /// In most cases, amount_delegated should be some multiple of payment_config.amount_to_collect_per_period. This should probably be
 /// enforced at the contract level but for now it seems fine to not implement it.
 #[access_control(InitializePaymentMetadata::accounts(&ctx, amount_delegated))]
-pub fn handler(ctx: Context<InitializePaymentMetadata>, amount_delegated: u64) -> Result<()> {
+pub fn handler(
+    ctx: Context<InitializePaymentMetadata>,
+    amount_delegated: u64,
+    _payment_config_index: u8,
+    _merchant_authority_index: u8,
+) -> Result<()> {
     let bump = *ctx.bumps.get("payment_metadata").unwrap();
     let payment_metadata = &mut ctx.accounts.payment_metadata;
     let payment_config = &mut ctx.accounts.payment_config;

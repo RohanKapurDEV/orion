@@ -94,8 +94,15 @@ pub mod recurring {
     pub fn initialize_payment_metadata(
         ctx: Context<InitializePaymentMetadata>,
         amount_delegated: u64,
+        payment_config_index: u8,
+        merchant_authority_index: u8,
     ) -> Result<()> {
-        instructions::initialize_payment_metadata::handler(ctx, amount_delegated)
+        instructions::initialize_payment_metadata::handler(
+            ctx,
+            amount_delegated,
+            payment_config_index,
+            merchant_authority_index,
+        )
     }
 
     pub fn close_payment_metadata(
