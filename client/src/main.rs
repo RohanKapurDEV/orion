@@ -39,6 +39,7 @@ async fn main() {
                     keypair_path,
                     params.merchant_authority,
                     params.payment_mint,
+                    params.merchant_authority_index,
                     params.index,
                     params.spacing_period,
                     params.collect_on_init,

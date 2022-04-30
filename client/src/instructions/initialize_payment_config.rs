@@ -15,6 +15,7 @@ pub async fn initialize_payment_config(
     merchant_authority: String,
     payment_mint: String,
     index: u8,
+    merchant_authority_index: u8,
     spacing_period: i64,
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
@@ -42,6 +43,8 @@ pub async fn initialize_payment_config(
     let merchant_authority_account: MerchantAuthority =
         program.account(merchant_authority_pubkey)?;
 
+    let init_authority_pubkey = merchant_authority_account.init_authority;
+
     if merchant_authority_account.current_authority != authority {
         panic!("{}", INCORRECT_AUTH_FOR_PAYMENT_CONFIG)
     }
@@ -60,7 +63,8 @@ pub async fn initialize_payment_config(
 
     let accounts = recurring_accounts::InitializePaymentConfig {
         payer: authority,
-        merchant_auth: merchant_authority_pubkey,
+        merchant_authority: merchant_authority_pubkey,
+        init_authority: init_authority_pubkey,
         payment_config: payment_config_pubkey,
         payment_mint: payment_mint_pubkey,
         payment_token_account,
@@ -72,6 +76,7 @@ pub async fn initialize_payment_config(
     let params = recurring_ixs::InitializePaymentConfig {
         amount_to_collect_on_init,
         amount_to_collect_per_period,
+        merchant_authority_index,
         collect_on_init,
         index,
         spacing_period,
