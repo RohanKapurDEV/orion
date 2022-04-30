@@ -37,7 +37,7 @@ pub struct InitializePaymentConfig<'info> {
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
     /// CHECK: not used in instruction logic, just as seed for merchant_authority account. validated in constraint
-    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
+    #[account(constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
     pub init_authority: UncheckedAccount<'info>,
 
     pub payment_mint: Account<'info, Mint>,
