@@ -1,4 +1,3 @@
-use crate::error::*;
 use crate::utils::*;
 use anchor_client::{
     solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer},
