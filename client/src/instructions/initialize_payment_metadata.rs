@@ -1,6 +1,5 @@
-use crate::{args::MerchantAccountParams, utils::*};
+use crate::utils::*;
 use anchor_client::{
-    anchor_lang::Key,
     solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer},
     Client, ClientError,
 };
@@ -20,7 +19,6 @@ pub async fn initialize_payment_metadata(
     let program_id_pubkey = Pubkey::from_str(PROGRAM_ID).unwrap();
     let system_program_pubkey = Pubkey::from_str(SYSTEM_PROGRAM).unwrap();
     let token_program_pubkey = Pubkey::from_str(TOKEN_PROGRAM).unwrap();
-    let rent_pubkey = Pubkey::from_str(RENT).unwrap();
     let assoc_token_program_pubkey = Pubkey::from_str(ASSOCIATED_TOKEN_PROGRAM).unwrap();
 
     let data = fs::read_to_string(keypair_path).expect("Unable to read file");

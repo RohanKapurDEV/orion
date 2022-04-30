@@ -29,6 +29,7 @@ async fn main() {
                     }
                 }
             }
+
             EntityType::InitPaymentConfig(params) => {
                 let network = params.network;
                 let keypair_path = params.keypair_path;
@@ -54,6 +55,7 @@ async fn main() {
                     }
                 }
             }
+
             EntityType::InitPaymentMetadata(params) => {
                 let network = params.network;
                 let keypair_path = params.keypair_path;
@@ -75,6 +77,7 @@ async fn main() {
                     }
                 }
             }
+            #[allow(unreachable_patterns)]
             _ => {}
         },
     }
