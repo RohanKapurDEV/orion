@@ -42,6 +42,7 @@ pub mod recurring {
     pub fn initialize_payment_config(
         ctx: Context<InitializePaymentConfig>,
         index: u8,
+        merchant_authority_index: u8,
         spacing_period: i64,
         collect_on_init: bool,
         amount_to_collect_on_init: u64,
@@ -50,6 +51,7 @@ pub mod recurring {
         instructions::initialize_payment_config::handler(
             ctx,
             index,
+            merchant_authority_index,
             spacing_period,
             collect_on_init,
             amount_to_collect_on_init,

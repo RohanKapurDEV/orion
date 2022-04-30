@@ -10,25 +10,35 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 #[derive(Accounts)]
 #[instruction(
     index: u8,
+    merchant_authority_index: u8,
     _spacing_period: i64,
     _collect_on_init: bool,
     _amount_to_collect_on_init: u64,
     _amount_to_collect_per_period: u64
 )]
 pub struct InitializePaymentConfig<'info> {
-    #[account(mut, constraint = payer.key() == merchant_auth.current_authority @ RecurringError::IncorrectAuthorityForPaymentConfig)]
+    #[account(mut, constraint = payer.key() == merchant_authority.current_authority @ RecurringError::IncorrectAuthorityForPaymentConfig)]
     pub payer: Signer<'info>,
 
     #[account(
         init,
         payer = payer,
-        seeds = [b"payment_config".as_ref(), &index.to_le_bytes(),  merchant_auth.key().as_ref()],
+        seeds = [b"payment_config".as_ref(), &index.to_le_bytes(),  merchant_authority.key().as_ref()],
         bump,
         space = 8 + 32 + 32 + 32 + 1 + 8 + 8 + 8 + 1 + 1
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
-    pub merchant_auth: Account<'info, MerchantAuthority>,
+    #[account(
+        seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
+        bump,
+        constraint = merchant_authority.key() == payment_config.merchant_authority
+    )]
+    pub merchant_authority: Account<'info, MerchantAuthority>,
+
+    /// CHECK: not used in instruction logic, just as seed for merchant_authority account. validated in constraint
+    #[account(mut, constraint = init_authority.key() == merchant_authority.init_authority @ RecurringError::IncorrectInitAuthority)]
+    pub init_authority: UncheckedAccount<'info>,
 
     pub payment_mint: Account<'info, Mint>,
 
@@ -36,7 +46,7 @@ pub struct InitializePaymentConfig<'info> {
         init,
         payer = payer,
         token::mint = payment_mint,
-        token::authority = merchant_auth
+        token::authority = merchant_authority
     )]
     pub payment_token_account: Account<'info, TokenAccount>,
 
@@ -48,6 +58,7 @@ pub struct InitializePaymentConfig<'info> {
 pub fn handler(
     ctx: Context<InitializePaymentConfig>,
     index: u8,
+    _merchant_authority_index: u8,
     spacing_period: i64,
     collect_on_init: bool,
     amount_to_collect_on_init: u64,
@@ -58,7 +69,7 @@ pub fn handler(
 
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
     payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
-    payment_config.merchant_authority = ctx.accounts.merchant_auth.key();
+    payment_config.merchant_authority = ctx.accounts.merchant_authority.key();
     payment_config.spacing_period = spacing_period;
     payment_config.amount_to_collect_per_period = amount_to_collect_per_period;
     payment_config.collect_on_init = collect_on_init;

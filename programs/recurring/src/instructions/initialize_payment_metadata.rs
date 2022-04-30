@@ -3,8 +3,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{approve, transfer, Approve, Token, TokenAccount, Transfer};
 
 /// Based on the derivation seeds for the PaymentMetadata account, any given pubkey can only hold one PaymentMetadata
-/// account for any given PaymentConfig. If a merchant notices that a payments collection has failed _due to insufficient
-/// balance_, the merchant should close the PaymentMetadata account immediately.
+/// account for any given PaymentConfig since there is no index seed requirement. If a merchant notices that a payments
+/// collection has failed due to insufficient balance, the merchant should close the PaymentMetadata account immediately
 
 #[derive(Accounts)]
 #[instruction(amount_delegated: u64)]
@@ -26,7 +26,6 @@ pub struct InitializePaymentMetadata<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.mint == payment_config.payment_mint @ RecurringError::IncorrectMint,
-        // constraint = owner_payment_account.amount >= amount_delegated @ RecurringError::InsufficientBalanceToDelegate,
         constraint = owner_payment_account.owner == payer.key() @ RecurringError::IncorrectAuthority
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
