@@ -6,7 +6,6 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 /// current index; it's a number that refers to the amount of PaymentConfigs issued by a specific MerchantAuthority account.
 ///
 /// Another gotcha here is when a MerchantAuthority does switch out it's current authority,
-
 #[derive(Accounts)]
 #[instruction(
     index: u8,
@@ -31,8 +30,7 @@ pub struct InitializePaymentConfig<'info> {
 
     #[account(
         seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
-        bump,
-        constraint = merchant_authority.key() == payment_config.merchant_authority
+        bump
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
