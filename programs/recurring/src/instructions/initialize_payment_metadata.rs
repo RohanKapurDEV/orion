@@ -23,8 +23,7 @@ pub struct InitializePaymentMetadata<'info> {
 
     #[account(
         seeds = [b"payment_config", &payment_config_index.to_le_bytes(), merchant_authority.key().as_ref()],
-        bump,
-        constraint = payment_config.key() == payment_metadata.payment_config @ RecurringError::IncorrectPaymentConfigAccount
+        bump
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
