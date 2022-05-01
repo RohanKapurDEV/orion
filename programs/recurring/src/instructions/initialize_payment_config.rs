@@ -2,6 +2,14 @@ use crate::{error::*, state::*};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
+#[event]
+pub struct InitializePaymentConfigEvent {
+    pub payment_config_pubkey: Pubkey,
+    pub merchant_authority: Pubkey,
+    pub payment_mint: Pubkey,
+    pub payment_token_account: Pubkey,
+}
+
 /// An important thing to note is that if a MerchantAuthority intends on issuing multiple PaymentConfigs, they need to keep track of the
 /// current index; it's a number that refers to the amount of PaymentConfigs issued by a specific MerchantAuthority account.
 ///
@@ -74,6 +82,13 @@ pub fn handler(
     payment_config.amount_to_collect_on_init = amount_to_collect_on_init;
     payment_config.index = index;
     payment_config.bump = bump;
+
+    emit!(InitializePaymentConfigEvent {
+        payment_config_pubkey: payment_config.key(),
+        payment_mint: ctx.accounts.payment_mint.key(),
+        merchant_authority: ctx.accounts.merchant_authority.key(),
+        payment_token_account: ctx.accounts.payment_token_account.key()
+    });
 
     Ok(())
 }

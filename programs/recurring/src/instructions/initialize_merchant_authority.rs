@@ -1,6 +1,14 @@
 use crate::state::*;
 use anchor_lang::prelude::*;
 
+#[event]
+pub struct InitializeMerchantAuthorityEvent {
+    pub merchant_authority_pubkey: Pubkey,
+    pub authority: Pubkey, // Same value for both current and init authority
+    pub index: u8,
+    pub bump: u8,
+}
+
 #[derive(Accounts)]
 #[instruction(index: u8)]
 pub struct InitializeMerchantAuthority<'info> {
@@ -31,6 +39,13 @@ pub fn handler(ctx: Context<InitializeMerchantAuthority>, index: u8) -> Result<(
     merchant_authority.pending_authority = Pubkey::default();
     merchant_authority.index = index;
     merchant_authority.bump = bump;
+
+    emit!(InitializeMerchantAuthorityEvent {
+        merchant_authority_pubkey: merchant_authority.key(),
+        authority: ctx.accounts.authority.key(),
+        bump,
+        index
+    });
 
     Ok(())
 }
