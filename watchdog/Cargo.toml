@@ -1,0 +1,10 @@
+[package]
+name = "watchdog"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+solana-client-async = { git = "https://github.com/dovahcrow/solana-client-async", version = "0.1.0" }
+tokio = { version = "1.13.0", features = ["full"] }
