@@ -1,6 +1,6 @@
 use crate::utils::*;
 use anchor_client::{
-    solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer},
+    solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer, vote::program},
     Client, ClientError,
 };
 use recurring::accounts as recurring_accounts;
@@ -58,6 +58,14 @@ pub async fn initialize_payment_config(
         &program_id_pubkey,
     );
 
+    let (payment_account_pubkey, _bump) = Pubkey::find_program_address(
+        &[
+            b"payment_account",
+            payment_config_pubkey.to_bytes().as_ref(),
+        ],
+        &program_id_pubkey,
+    );
+
     let payment_token_account_keypair = Keypair::new();
     let payment_token_account = payment_token_account_keypair.pubkey();
 
@@ -66,6 +74,7 @@ pub async fn initialize_payment_config(
         merchant_authority: merchant_authority_pubkey,
         init_authority: init_authority_pubkey,
         payment_config: payment_config_pubkey,
+        payment_account: payment_account_pubkey,
         payment_mint: payment_mint_pubkey,
         payment_token_account,
         rent: rent_pubkey,
