@@ -19,6 +19,7 @@ pub struct PaymentConfig {
     pub payment_mint: Pubkey,
     pub payment_token_account: Pubkey,
     pub merchant_authority: Pubkey,
+    pub payment_account: Pubkey,
     pub collect_on_init: bool,
     pub amount_to_collect_on_init: u64,
     pub amount_to_collect_per_period: u64,

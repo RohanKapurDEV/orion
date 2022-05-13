@@ -36,6 +36,9 @@ pub struct InitializePaymentConfig<'info> {
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
+    #[account(seeds = [b"payment_account".as_ref(), payment_config.key().as_ref()], bump)]
+    pub payment_account: UncheckedAccount<'info>,
+
     #[account(
         seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
         bump
@@ -76,6 +79,7 @@ pub fn handler(
     payment_config.payment_mint = ctx.accounts.payment_mint.key();
     payment_config.payment_token_account = ctx.accounts.payment_token_account.key();
     payment_config.merchant_authority = ctx.accounts.merchant_authority.key();
+    payment_config.payment_account = ctx.accounts.payment_account.key();
     payment_config.spacing_period = spacing_period;
     payment_config.amount_to_collect_per_period = amount_to_collect_per_period;
     payment_config.collect_on_init = collect_on_init;
