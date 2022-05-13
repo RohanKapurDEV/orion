@@ -3835,10 +3835,12 @@ name = "watchdog"
 version = "0.1.0"
 dependencies = [
  "anchor-client",
+ "anchor-lang",
  "anchor-spl",
  "clap 3.1.12",
  "dotenv",
  "recurring",
+ "regex",
  "serde_json",
  "solana-client-async",
  "thiserror",

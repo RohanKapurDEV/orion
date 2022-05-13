@@ -20,6 +20,8 @@ pub enum EntityType {
     InitPaymentConfig(PaymentConfigParams),
     /// Initialize a PaymentMetadata account
     InitPaymentMetadata(PaymentMetadataParams),
+    // TODO: Create subcommand for registering PaymentConfigs and PaymentMetadatas
+    // with the API as long as they have the right associated MerchantAuthority
 }
 
 #[derive(Debug, Args)]
