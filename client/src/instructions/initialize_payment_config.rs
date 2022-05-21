@@ -1,6 +1,6 @@
 use crate::utils::*;
 use anchor_client::{
-    solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer, vote::program},
+    solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer},
     Client, ClientError,
 };
 use recurring::accounts as recurring_accounts;

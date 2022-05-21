@@ -36,6 +36,7 @@ pub struct InitializePaymentConfig<'info> {
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
+    /// CHECK: Unused for the moment
     #[account(seeds = [b"payment_account".as_ref(), payment_config.key().as_ref()], bump)]
     pub payment_account: UncheckedAccount<'info>,
 
