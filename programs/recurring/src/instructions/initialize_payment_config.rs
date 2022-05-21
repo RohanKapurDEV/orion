@@ -32,7 +32,7 @@ pub struct InitializePaymentConfig<'info> {
         payer = payer,
         seeds = [b"payment_config".as_ref(), &index.to_le_bytes(),  merchant_authority.key().as_ref()],
         bump,
-        space = 8 + 32 + 32 + 32 + 1 + 8 + 8 + 8 + 1 + 1
+        space = 8 + 32 + 32 + 32 + 32 + 1 + 8 + 8 + 8 + 1 + 1
     )]
     pub payment_config: Account<'info, PaymentConfig>,
 
