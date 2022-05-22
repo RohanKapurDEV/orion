@@ -11,7 +11,7 @@ pub struct MerchantAuthority {
 }
 
 /// When you want to change the authority of a PaymentConfig, simply switch out the currrent_authority
-/// on it's associayed MerchantAuthority. The operator will still need to keep track of the Merchant-
+/// on it's associated MerchantAuthority. The operator will still need to keep track of the Merchant-
 /// Authority's initial authority account. This is stored in the account itself for convenience.
 #[account]
 #[derive(Default)]
