@@ -12,7 +12,7 @@ pub struct CollectPayment<'info> {
     #[account(
         seeds = [b"merchant_authority", &merchant_authority_index.to_le_bytes(), init_authority.key().as_ref()],
         bump,
-        constraint = merchant_authority.key() == payment_config.merchant_authority
+        constraint = merchant_authority.key() == payment_config.merchant_authority @ RecurringError::IncorrectMerchantAuthority
     )]
     pub merchant_authority: Account<'info, MerchantAuthority>,
 
@@ -40,7 +40,7 @@ pub struct CollectPayment<'info> {
     #[account(
         mut,
         constraint = owner_payment_account.key() == payment_metadata.owner_payment_account @ RecurringError::IncorrectOwnerPaymentAccount,
-        constraint = owner_payment_account.delegate.unwrap() == program_as_signer.key()
+        constraint = owner_payment_account.delegate.unwrap() == program_as_signer.key() @ RecurringError::IncorrectDelegateForTokenAccount
     )]
     pub owner_payment_account: Account<'info, TokenAccount>,
 
