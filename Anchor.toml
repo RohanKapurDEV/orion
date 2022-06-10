@@ -2,7 +2,7 @@
 seeds = false
 
 [programs.localnet]
-recurring = "CFHiFGAChg829XSFBRhswft7Vnmc9tQdR3Esiqcxmeef"
+recurring = "4AWRyt6whM4M8C4rimokJxvDP6bts7NxWNxZuyFVKD31"
 
 [registry]
 url = "https://anchor.projectserum.com"
